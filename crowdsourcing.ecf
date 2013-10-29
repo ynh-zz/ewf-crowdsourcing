@@ -6,18 +6,18 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/.git$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="all"  syntax="transitional">
+		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="transitional"  syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\ewf-dev\library\network\protocol\http\http-safe.ecf"/>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf"/>
-		<library name="wsf" location="$ISE_LIBRARY\contrib\library\ewf-dev\library\server\wsf\wsf-safe.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\ewf-dev\library\servevoidr\wsf\wsf-safe.ecf"/>
 		<library name="wsf_js_widget" location="$ISE_LIBRARY\contrib\library\ewf-dev\draft\library\wsf_js_widget\wsf_js_widget-safe.ecf" readonly="false"/>
 	</target>
 	<target name="crowdsourcing_nino" extends="common">
 		<root class="APPLICATION" feature="make_and_launch"/>
-		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\ewf-dev\library\server\wsf\default\nino-safe.ecf"/>
@@ -26,7 +26,7 @@
 	</target>
 	<target name="crowdsourcing_cgi" extends="common">
 		<root class="APPLICATION" feature="make_and_launch"/>
-		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\ewf-dev\library\server\wsf\default\cgi-safe.ecf"/>
@@ -34,7 +34,7 @@
 	</target>
 	<target name="crowdsourcing_libfcgi" extends="common">
 		<root class="APPLICATION" feature="make_and_launch"/>
-		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\ewf-dev\library\server\wsf\default\libfcgi-safe.ecf"/>
