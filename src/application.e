@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			initialize_router
 			initialize_filter
 			Precursor
-			set_service_option ("port", 9090)
+			set_service_option ("port", 7070)
 		end
 
 feature -- Router and Filter
