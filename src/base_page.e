@@ -24,7 +24,7 @@ feature
 		do
 			create control.make_multi_control ("container")
 			control.add_class ("container")
-			create navbar.make_navbar_with_brand ("navbar1", "EWF Crowwwwwwwwwwwd Sourcing")
+			create navbar.make_navbar_with_brand ("navbar1", "EWF Crowwwwwd Sourcing")
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/%"", "Home"))
 			if not attached get_parameter ("ajax") then
 				control.add_control (navbar)
