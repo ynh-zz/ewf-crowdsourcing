@@ -26,6 +26,7 @@ feature
 			create datasource.make (database)
 			create grid.make_grid ("mygrid", <<create {WSF_GRID_COLUMN}.make ("Title", "title"), create {WSF_GRID_COLUMN}.make ("Description", "description")>>, datasource)
 			control.add_control (grid)
+			navbar.set_active(2)
 		end
 
 
