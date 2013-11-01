@@ -20,8 +20,8 @@ feature {NONE}
 
 	make (db: SQLITE_DATABASE; req: WSF_REQUEST; res: WSF_RESPONSE)
 		do
-			make_wsf_page (req, res)
 			database := db
+			make_wsf_page (req, res)
 		end
 
 feature

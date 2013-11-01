@@ -49,9 +49,11 @@ feature
 		local
 			list: LINKED_LIST [PROJECT_ENTITY]
 			cursor: SQLITE_STATEMENT_ITERATION_CURSOR
+			statement: SQLITE_STATEMENT
 		do
 			create list.make
-			cursor := (create {SQLITE_STATEMENT}.make ("SELECT id,title, description FROM projects", database)).execute_new
+			create statement.make ("SELECT id,title, description FROM projects;", database)
+			cursor := statement.execute_new
 			across
 				cursor as row
 			loop

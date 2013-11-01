@@ -117,9 +117,7 @@ feature --DB
 
 	connect_to_database
 		do
-			create database.make_open_read_write ("Crowdsourcing.sql")
-		ensure
-			attached database
+			create database.make_open_read_write ("Crowdsourcing.db")
 		end
 
 	database: SQLITE_DATABASE
