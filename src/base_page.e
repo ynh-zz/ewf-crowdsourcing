@@ -10,10 +10,19 @@ deferred class
 inherit
 
 	WSF_PAGE_CONTROL
+		rename
+			make as make_wsf_page
 		redefine
 			control
 		end
 
+feature {NONE}
+
+	make (db: SQLITE_DATABASE; req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			make_wsf_page (req, res)
+			database := db
+		end
 
 feature
 
@@ -34,5 +43,9 @@ feature
 feature
 
 	control: WSF_MULTI_CONTROL [WSF_STATELESS_CONTROL]
+
+feature --DB
+
+	database: SQLITE_DATABASE
 
 end

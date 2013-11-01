@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize current service.
 		do
+			connect_to_database
 			initialize_router
 			initialize_filter
 			Precursor
@@ -99,9 +100,19 @@ feature -- Execution
 		do
 				-- To send a response we need to setup, the status code and
 				-- the response headers.
-			create page.make (request, response)
+			create page.make (database, request, response)
 			page.execute
 		end
 
+feature --DB
+
+	connect_to_database
+		do
+			create database.make_open_read_write ("Crowdsourcing.sql")
+		ensure
+			attached database
+		end
+
+	database: SQLITE_DATABASE
 
 end
