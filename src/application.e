@@ -79,6 +79,7 @@ feature -- Router and Filter
 	setup_router
 		do
 			map_agent_uri ("/", agent execute_hello, Void)
+			map_agent_uri ("/grid", agent execute_grid, Void)
 
 				-- NOTE: you could put all those files in a specific folder, and use WSF_FILE_SYSTEM_HANDLER with "/"
 				-- this way, it handles the caching and so on
@@ -100,6 +101,14 @@ feature -- Execution
 		do
 				-- To send a response we need to setup, the status code and
 				-- the response headers.
+			create page.make (database, request, response)
+			page.execute
+		end
+
+	execute_grid (request: WSF_REQUEST; response: WSF_RESPONSE)
+		local
+			page: GRID_PAGE
+		do
 			create page.make (database, request, response)
 			page.execute
 		end
