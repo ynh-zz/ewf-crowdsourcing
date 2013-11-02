@@ -33,9 +33,9 @@ feature {NONE}
 					if l_type = {SQLITE_TYPE}.blob then
 						value := row.blob_value (index)
 					elseif l_type = {SQLITE_TYPE}.float then
-						create {CELL [REAL_64]} value.put (row.real_64_value (index))
+						value := row.real_64_value (index)
 					elseif l_type = {SQLITE_TYPE}.integer then
-						create {CELL [INTEGER_64]} value.put (row.integer_64_value (index))
+						value := row.integer_64_value (index)
 					elseif l_type = {SQLITE_TYPE}.text then
 						value := row.string_value (index)
 					else
