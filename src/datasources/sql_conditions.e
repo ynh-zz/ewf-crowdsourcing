@@ -26,7 +26,52 @@ feature
 
 	equals (a_field: STRING; a_value: ANY)
 		do
-			list.extend (create {SQL_CONDITON_EQUALS}.make (a_field, a_value))
+			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "=", a_value))
+		end
+
+	not_equals (a_field: STRING; a_value: ANY)
+		do
+			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "!=", a_value))
+		end
+
+	less_than (a_field: STRING; a_value: ANY)
+		do
+			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "<", a_value))
+		end
+
+	less_or_equal_than (a_field: STRING; a_value: ANY)
+		do
+			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "<=", a_value))
+		end
+
+	greater_than (a_field: STRING; a_value: ANY)
+		do
+			list.extend (create {SQL_BASE_CONDITON}.make (a_field, ">", a_value))
+		end
+
+	greater_or_equal_than (a_field: STRING; a_value: ANY)
+		do
+			list.extend (create {SQL_BASE_CONDITON}.make (a_field, ">=", a_value))
+		end
+
+	sql_like (a_field: STRING; a_value: STRING)
+		do
+			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "like", a_value))
+		end
+
+	contains (a_field: STRING; a_value: STRING)
+		do
+			sql_like (a_field, "%%" + a_value + "%%")
+		end
+
+	start_with (a_field: STRING; a_value: STRING)
+		do
+			sql_like (a_field, a_value + "%%")
+		end
+
+	end_with (a_field: STRING; a_value: STRING)
+		do
+			sql_like (a_field, "%%" + a_value)
 		end
 
 	query: STRING

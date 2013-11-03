@@ -23,7 +23,7 @@ feature
 		do
 			create a_query.make
 			create cond.make_condition ("AND")
-			cond.equals ("id", 4)
+			cond.contains ("title", "g")
 			a_query.set_fields (<<["id"], ["title"], ["description"]>>)
 			a_query.set_table_name ("projects")
 			a_query.set_where (cond)

@@ -8,7 +8,6 @@ deferred class
 	SQL_DATASOURCE [T -> SQL_ENTITY create make_from_sqlite_result_row end]
 
 inherit
-	SQL_HELPER
 	WSF_PAGABLE_DATASOURCE [T]
 
 feature {NONE}
