@@ -74,6 +74,11 @@ feature
 			sql_like (a_field, "%%" + a_value)
 		end
 
+	item alias "[]" (key: STRING): SQL_CONDITON_HELPER
+		do
+			create Result.make(key, Current)
+		end
+
 	query: STRING
 		do
 			create Result.make_empty

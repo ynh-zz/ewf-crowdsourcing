@@ -23,11 +23,25 @@ feature
 		do
 			create a_query.make
 			create cond.make_condition ("AND")
-			cond.contains ("title", "g")
+			cond["title"].contains("")
 			a_query.set_fields (<<["id"], ["title"], ["description"]>>)
 			a_query.set_table_name ("projects")
 			a_query.set_where (cond)
 			make (db, a_query)
+		end
+
+	set_query (q: STRING)
+		local
+			a_query: SQL_QUERY
+			cond: SQL_CONDITIONS
+		do
+			create a_query.make
+			create cond.make_condition ("AND")
+			cond["title"].contains(q)
+			a_query.set_fields (<<["id"], ["title"], ["description"]>>)
+			a_query.set_table_name ("projects")
+			a_query.set_where (cond)
+			query := a_query
 		end
 
 end

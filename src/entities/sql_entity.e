@@ -56,7 +56,7 @@ feature {NONE} -- DATA
 
 feature -- Access
 
-	item (a_field: READABLE_STRING_GENERAL): detachable ANY
+	item alias "[]" (a_field: READABLE_STRING_GENERAL): detachable ANY
 			-- <Precursor>
 		do
 			if data.has (a_field) then
