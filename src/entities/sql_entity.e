@@ -29,7 +29,7 @@ feature {NONE}
 				index := f.cursor_index.as_natural_32
 				value := row.value (index)
 				if attached {CELL [ANY]} value as cell then
-					value:=cell.item
+					value := cell.item
 				end
 				if attached {READABLE_STRING_GENERAL} f.item.at (1) as s then
 					data.put (value, s)

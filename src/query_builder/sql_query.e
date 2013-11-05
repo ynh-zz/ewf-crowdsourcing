@@ -67,17 +67,17 @@ feature
 
 	left_join (td: SQL_TABLE_DEFINITION; cond: SQL_CONDITION)
 		do
-			joins.extend (create {SQL_JOIN_DEFINITION}.make("LEFT JOIN", td, cond))
+			joins.extend (create {SQL_JOIN_DEFINITION}.make ("LEFT JOIN", td, cond))
 		end
 
 	inner_join (td: SQL_TABLE_DEFINITION; cond: SQL_CONDITION)
 		do
-			joins.extend (create {SQL_JOIN_DEFINITION}.make("INNER JOIN", td, cond))
+			joins.extend (create {SQL_JOIN_DEFINITION}.make ("INNER JOIN", td, cond))
 		end
 
 	outer_join (td: SQL_TABLE_DEFINITION; cond: SQL_CONDITION)
 		do
-			joins.extend (create {SQL_JOIN_DEFINITION}.make("OUTER JOIN", td, cond))
+			joins.extend (create {SQL_JOIN_DEFINITION}.make ("OUTER JOIN", td, cond))
 		end
 
 feature --Build Query
@@ -159,11 +159,11 @@ feature --Build Query
 			if attached table as a then
 				Result := a.args
 			end
-				across
-					joins as join
-				loop
-					Result := concatenation (Result, join.item.args)
-				end
+			across
+				joins as join
+			loop
+				Result := concatenation (Result, join.item.args)
+			end
 			if attached where as a then
 				Result := concatenation (Result, a.args)
 			end

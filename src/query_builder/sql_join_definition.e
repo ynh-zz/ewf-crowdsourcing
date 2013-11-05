@@ -8,6 +8,7 @@ class
 	SQL_JOIN_DEFINITION
 
 inherit
+
 	ANY
 
 	TUPLE_UTILITIES

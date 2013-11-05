@@ -21,7 +21,7 @@ feature
 			a_field.append (" ")
 			a_field.append (operator)
 			a_field.append (" ?")
-			static_expr:=a_field
+			static_expr := a_field
 			static_args := [a_value]
 		end
 

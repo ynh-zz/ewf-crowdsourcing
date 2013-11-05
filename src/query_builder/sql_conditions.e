@@ -10,10 +10,10 @@ class
 inherit
 
 	SQL_CONDITION
-	redefine
-		expr,
-		args
-	end
+		redefine
+			expr,
+			args
+		end
 
 create
 	make_condition
@@ -80,7 +80,7 @@ feature
 
 	item alias "[]" (key: STRING): SQL_CONDITON_HELPER
 		do
-			create Result.make(key, Current)
+			create Result.make (key, Current)
 		end
 
 	expr: STRING
@@ -102,7 +102,7 @@ feature
 
 	args: TUPLE
 		do
-			Result:=[]
+			Result := []
 			across
 				list as el
 			loop

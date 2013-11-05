@@ -6,17 +6,20 @@ note
 
 class
 	SQL_CONDITON_HELPER
+
 create
 	make
+
 feature {NONE}
 
-	make(a_field:STRING;a_parent:SQL_CONDITIONS)
-	do
-		field:=a_field
-		parent:=a_parent
-	end
+	make (a_field: STRING; a_parent: SQL_CONDITIONS)
+		do
+			field := a_field
+			parent := a_parent
+		end
 
 feature
+
 	equals (a_value: ANY)
 		do
 			parent.equals (field, a_value)
@@ -68,6 +71,9 @@ feature
 		end
 
 feature
-	field:STRING
+
+	field: STRING
+
 	parent: SQL_CONDITIONS
+
 end
