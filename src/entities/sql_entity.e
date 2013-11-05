@@ -27,22 +27,9 @@ feature {NONE}
 				a_fields as f
 			loop
 				index := f.cursor_index.as_natural_32
-				l_type := row.type (index)
-				value := Void
-				if l_type /= {SQLITE_TYPE}.null then
-					if l_type = {SQLITE_TYPE}.blob then
-						value := row.blob_value (index)
-					elseif l_type = {SQLITE_TYPE}.float then
-						value := row.real_64_value (index)
-					elseif l_type = {SQLITE_TYPE}.integer then
-						value := row.integer_64_value (index)
-					elseif l_type = {SQLITE_TYPE}.text then
-						value := row.string_value (index)
-					else
-						check
-							unknown_type: False
-						end
-					end
+				value := row.value (index)
+				if attached {CELL [ANY]} value as cell then
+					value := cell.item
 				end
 				if attached {READABLE_STRING_GENERAL} f.item.at (1) as s then
 					data.put (value, s)
@@ -56,7 +43,7 @@ feature {NONE} -- DATA
 
 feature -- Access
 
-	item (a_field: READABLE_STRING_GENERAL): detachable ANY
+	item alias "[]" (a_field: READABLE_STRING_GENERAL): detachable ANY
 			-- <Precursor>
 		do
 			if data.has (a_field) then
