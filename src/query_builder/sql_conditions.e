@@ -10,6 +10,10 @@ class
 inherit
 
 	SQL_CONDITION
+	redefine
+		expr,
+		args
+	end
 
 create
 	make_condition
@@ -79,13 +83,15 @@ feature
 			create Result.make(key, Current)
 		end
 
-	query: STRING
+	expr: STRING
 		do
 			create Result.make_empty
 			across
 				list as el
 			loop
-				Result.append (el.item.out)
+				Result.append ("(")
+				Result.append (el.item.expr)
+				Result.append (")")
 				if not el.is_last then
 					Result.append (" ")
 					Result.append (operator)
@@ -94,13 +100,13 @@ feature
 			end
 		end
 
-	args: ARRAYED_LIST [ANY]
+	args: TUPLE
 		do
-			create Result.make (0)
+			Result:=[]
 			across
 				list as el
 			loop
-				Result := merge (Result, el.item.args)
+				Result := concatenation (Result, el.item.args)
 			end
 		end
 

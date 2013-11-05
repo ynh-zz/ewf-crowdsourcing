@@ -28,7 +28,7 @@ feature
 			search_query.add_class ("form-control")
 			search_query.set_change_event (agent change_query)
 			control.add_control (search_query)
-			create grid.make ("mygrid", <<create {WSF_GRID_COLUMN}.make ("#", "id"), create {WSF_GRID_COLUMN}.make ("Title", "title"), create {WSF_GRID_COLUMN}.make ("Description", "description")>>, datasource)
+			create grid.make ("mygrid", <<create {WSF_GRID_COLUMN}.make ("#", "id"), create {WSF_GRID_COLUMN}.make ("Title", "title"), create {WSF_GRID_COLUMN}.make ("Category name", "cname")>>, datasource)
 			control.add_control (grid)
 			navbar.set_active (2)
 		end

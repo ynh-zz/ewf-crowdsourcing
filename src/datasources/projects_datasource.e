@@ -38,16 +38,23 @@ feature
 			cond: SQL_CONDITIONS
 			a_query: SQL_QUERY
 		do
-			create a_query.make
+			create a_query.make("projects")
+
+			a_query.set_fields (<<["id","projects.id"], ["title","projects.title"], ["cname","categories.name"]>>)
+
+			a_query.left_join ("categories","categories.id = category_id")
+
 			create cond.make_condition ("AND")
-			cond ["title"].contains (search_text)
-			a_query.set_fields (<<["id"], ["title"], ["description"]>>)
-			a_query.set_table_name ("projects")
 			a_query.set_where (cond)
+			cond ["projects.title"].contains (search_text)
+			cond ["projects.id"].greater_than (100)
+
+
 			query := a_query
 		end
 
 	search_text: STRING
+
 feature {WSF_PAGE_CONTROL, WSF_CONTROL} -- State management
 
 	state: WSF_JSON_OBJECT
@@ -67,4 +74,5 @@ feature {WSF_PAGE_CONTROL, WSF_CONTROL} -- State management
 		end
 
 feature -- Change
+
 end
