@@ -38,10 +38,12 @@ feature
 			if not attached get_parameter ("ajax") then
 				control.add_control (navbar)
 			end
+			create main_control.make ("main_control")
+			control.add_control (main_control)
 		end
 
 feature
-
+	main_control: WSF_LAYOUT_CONTROL
 	control: WSF_MULTI_CONTROL [WSF_STATELESS_CONTROL]
 
 feature --DB
