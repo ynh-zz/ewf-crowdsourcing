@@ -21,12 +21,12 @@ feature
 
 	initialize_controls
 		local
-			left: WSF_MULTI_CONTROL[WSF_STATELESS_CONTROL]
-			right: WSF_MULTI_CONTROL[WSF_STATELESS_CONTROL]
+			left: WSF_STATELESS_MULTI_CONTROL[WSF_STATELESS_CONTROL]
+			right: WSF_STATELESS_MULTI_CONTROL[WSF_STATELESS_CONTROL]
 		do
 			Precursor
-			create left.make ("leftcol")
-			create right.make ("rightcol")
+			create left.make_tag_less
+			create right.make_tag_less
 			main_control.add_control (left, 8)
 			main_control.add_control (right, 4)
 			left.add_control (create {WSF_BASIC_CONTROL}.make_with_body ("h3", "", "Projects"))
