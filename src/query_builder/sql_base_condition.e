@@ -22,7 +22,10 @@ feature
 			a_field.append (operator)
 			a_field.append (" ?")
 			static_expr := a_field
-			static_args := [a_value]
+			create static_args.make (1)
+			if attached static_args as a_static_args then
+				a_static_args.extend (a_value)
+			end
 		end
 
 end

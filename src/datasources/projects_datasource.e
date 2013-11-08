@@ -21,8 +21,6 @@ create
 feature
 
 	make_default (db: SQLITE_DATABASE)
-		local
-			cond: SQL_CONDITIONS
 		do
 			make (db)
 			search_text := ""

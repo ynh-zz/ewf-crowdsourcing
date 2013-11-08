@@ -11,7 +11,7 @@ inherit
 
 	ANY
 
-	TUPLE_UTILITIES
+	LIST_UTILITIES
 
 create
 	make_from_string
@@ -24,14 +24,14 @@ feature {NONE}
 	make_from_string (a_expr: STRING)
 		do
 			static_expr := a_expr
-			static_args := []
+			create static_args.make (0)
 		end
 
 feature
 
 	static_expr: detachable STRING
 
-	static_args: detachable TUPLE
+	static_args: detachable ARRAYED_LIST[detachable ANY]
 
 	expr: STRING
 		do
@@ -41,9 +41,9 @@ feature
 			end
 		end
 
-	args: TUPLE
+	args: ARRAYED_LIST[detachable ANY]
 		do
-			Result := []
+			create Result.make (0)
 			if attached static_args as ar then
 				Result := ar
 			end

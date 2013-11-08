@@ -11,7 +11,7 @@ inherit
 
 	ANY
 
-	TUPLE_UTILITIES
+	LIST_UTILITIES
 
 create
 	make
@@ -38,7 +38,7 @@ feature
 			Result.append (")")
 		end
 
-	args: TUPLE
+	args:  ARRAYED_LIST[detachable ANY]
 		do
 			Result := concatenation (table.args, condition.args)
 		end

@@ -69,6 +69,15 @@ Mini =
     {
       render:template(t)
     }
+parseSuggestions = (data)->
+  for a of data
+    if a == 'suggestions'
+      return data[a]
+    else
+      d = parseSuggestions(data[a])
+      if d?
+        return d
+  return null
 loaded = {}
 lazy_load = (requirements,fn,that)->
   if requirements.length == 0
@@ -93,10 +102,11 @@ lazy_load = (requirements,fn,that)->
       if not loaded[r]?
         loaded[r]=$.cachedAsset(r)
       loaded[r].done(done)
+            
     done()
 
 build_control = (control_name, state, control)->
-  $el = control.$el.find('[data-name='+control_name+']')
+  $el = control.$el.find('[data-name='+control_name+']').first()
   #get control type
   type = $el.data('type')
   #create class
@@ -175,16 +185,31 @@ class WSF_CONTROL
         console.log "Failed preforming action #{action.type}"
  
   process_update: (new_states)->
-    if new_states[@control_name]?
-      @update(new_states[@control_name])
-    for control in @controls
-      if control?
-        control.process_update(new_states)
+    try
+      if new_states[@control_name]?
+        @update(new_states[@control_name])
+        for control in @controls
+          if control?
+            control.process_update(new_states[this.control_name]['controls'])
+    catch e
+      return
+    return
+    
+    
 
   get_context_state : ()->
     if @parent_control? and not @isolation
       return @parent_control.get_context_state()
     return @wrap(@control_name,@fullstate)
+
+  get_full_control_name: ()->
+    if @parent_control? 
+      val = @parent_control.get_full_control_name()
+      if val != ""
+        val = val + "-"
+      return val+@control_name
+    return @control_name
+
   wrap : (cname,state)->
     ctrs = {}
     ctrs[cname] = state
@@ -200,10 +225,18 @@ class WSF_CONTROL
     @url + '?' + $.param(params)
 
   trigger_callback: (control_name,event,event_parameter)->
+    @run_trigger_callback(@get_full_control_name(),event,event_parameter)
+
+  get_page:()->
+    if @parent_control?
+      return @parent_control.get_page()
+    return @
+
+  run_trigger_callback: (control_name,event,event_parameter)->
     if @parent_control? and not @isolation
-      return @parent_control.trigger_callback(control_name,event,event_parameter)
+      return @parent_control.run_trigger_callback(control_name,event,event_parameter)
     self = @
-    $.ajax
+    return $.ajax
       type: 'POST',
       url: @callback_url
                       control_name: control_name
@@ -218,7 +251,7 @@ class WSF_CONTROL
       #Update all classes
       if new_states.actions?
         self.process_actions(new_states.actions)
-      self.process_update(new_states)
+      self.get_page().process_update(new_states)
       
   #Simple event listener
 
@@ -256,12 +289,29 @@ class WSF_PAGE_CONTROL extends WSF_CONTROL
     @initialize = lazy_load @requirements, @attach_events, @
     @load_subcontrols()
 
+  process_update: (new_states)->
+    for control in @controls
+      if control?
+        control.process_update(new_states)
+
+    return
+    
+
+  get_full_control_name: ()->
+    ""
+
   wrap : (cname,state)->
     state
 
   remove:()->
     console.log "Removed #{@control_name}"
     @$el.remove()
+    
+class WSF_SLIDER_CONTROL extends WSF_CONTROL
+  requirements: ['assets/bootstrap.min.js']
+
+class WSF_DROPDOWN_CONTROL extends WSF_CONTROL
+  requirements: ['assets/bootstrap.min.js']
 
 controls = {}
 
@@ -303,6 +353,17 @@ class WSF_INPUT_CONTROL extends WSF_CONTROL
     if state.text?
       @state['text'] = state.text
       @$el.val(state.text)
+      
+class WSF_NAVLIST_ITEM_CONTROL extends WSF_BUTTON_CONTROL
+  update: (state) ->
+    super
+    if state.active?
+      @state['active'] = state.active
+      if state.active
+        @$el.addClass("active")
+      else
+        @$el.removeClass("active")
+
 
 class WSF_TEXTAREA_CONTROL extends WSF_INPUT_CONTROL
 
@@ -334,8 +395,9 @@ class WSF_AUTOCOMPLETE_CONTROL extends WSF_INPUT_CONTROL
   attach_events: () ->
     super
     self = @
+    console.log @$el
     @$el.typeahead({
-      name: @control_name
+      name: @control_name+Math.random()
       template: @state['template']
       engine: Mini
       remote:
@@ -347,7 +409,7 @@ class WSF_AUTOCOMPLETE_CONTROL extends WSF_INPUT_CONTROL
                       event: 'autocomplete'
                       states: JSON.stringify(self.get_context_state())
         filter: (parsedResponse) ->
-            parsedResponse[self.control_name]['suggestions']
+            return parseSuggestions(parsedResponse)
         fn: ()->
           self.trigger_callback(self.control_name, 'autocomplete')
     })

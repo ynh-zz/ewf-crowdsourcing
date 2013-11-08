@@ -30,9 +30,9 @@ feature
 		local
 			btn: WSF_BUTTON_CONTROL
 		do
-			create control.make ("container")
+			create control.make
 			control.add_class ("container")
-			create navbar.make_with_brand ("navbar1", "EWF Crowd Sourcing")
+			create navbar.make_with_brand ("EWF Crowd Sourcing")
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/%"", "Home"))
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/grid%"", "Project grid"))
 			if not attached get_parameter ("ajax") then

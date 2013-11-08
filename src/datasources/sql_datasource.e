@@ -31,7 +31,6 @@ feature
 	data: ITERABLE [T]
 		local
 			list: LINKED_LIST [T]
-			statement: SQLITE_STATEMENT
 		do
 			if not attached query then
 				build_query

@@ -65,9 +65,9 @@ feature
 			end
 		end
 
-	args: TUPLE
+	args: ARRAYED_LIST[detachable ANY]
 		do
-			Result := []
+			create Result.make (0)
 		end
 
 end

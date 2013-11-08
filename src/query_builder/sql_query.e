@@ -19,7 +19,7 @@ inherit
 			args
 		end
 
-	TUPLE_UTILITIES
+	LIST_UTILITIES
 
 create
 	make
@@ -153,9 +153,9 @@ feature --Build Query
 			end
 		end
 
-	args_without_limits: TUPLE
+	args_without_limits: ARRAYED_LIST[detachable ANY]
 		do
-			Result := []
+			create Result.make (0)
 			if attached table as a then
 				Result := a.args
 			end
@@ -172,7 +172,7 @@ feature --Build Query
 			end
 		end
 
-	args: TUPLE
+	args: ARRAYED_LIST[detachable ANY]
 		do
 			Result := args_without_limits
 		end
