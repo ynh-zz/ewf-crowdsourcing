@@ -31,9 +31,9 @@ feature
 			search_text := q
 		end
 
-	set_country (id: INTEGER_64)
+	set_city (id: INTEGER_64)
 		do
-			country := id
+			city := id
 		end
 
 	set_category (id: INTEGER_64)
@@ -55,15 +55,15 @@ feature
 			cond ["projects.id"].greater_than (100)
 			cond.add ("categories.left >= (SELECT left FROM categories as c WHERE c.id = " + category.out + ")")
 			cond.add ("categories.right <= (SELECT right FROM categories as c WHERE c.id = " + category.out + ")")
-			if country /= 0 then
-				cond ["projects.city_id"].equals(country)
+			if city /= 0 then
+				cond ["projects.city_id"].equals(city)
 			end
 			query := a_query
 		end
 
 	search_text: STRING
 
-	country: INTEGER_64
+	city: INTEGER_64
 
 	category: INTEGER_64
 
@@ -74,7 +74,7 @@ feature {WSF_PAGE_CONTROL, WSF_CONTROL} -- State management
 		do
 			Result := Precursor
 			Result.put_string (search_text, "search_text")
-			Result.put_integer (country, "country")
+			Result.put_integer (city, "city")
 			Result.put_integer (category, "category")
 		end
 
@@ -85,8 +85,8 @@ feature {WSF_PAGE_CONTROL, WSF_CONTROL} -- State management
 			if attached {JSON_STRING} new_state.item ("search_text") as new_search_text then
 				search_text := new_search_text.item
 			end
-			if attached {JSON_NUMBER} new_state.item ("country") as new_country then
-				country := new_country.item.to_integer_64
+			if attached {JSON_NUMBER} new_state.item ("city") as new_city then
+				city := new_city.item.to_integer_64
 			end
 			if attached {JSON_NUMBER} new_state.item ("category") as new_category then
 				category := new_category.item.to_integer_64
