@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	SQL_QUERY
+	SQL_QUERY [T -> SQL_ENTITY create make_from_sqlite_result_row end]
 
 inherit
 
@@ -133,11 +133,11 @@ feature --Build Query
 	query: STRING
 		do
 			Result := query_without_limit
-			if attached start as a_start and attached rows as a_rows then
+			if start /= 0 or rows /= 0 then
 				Result.append (" LIMIT ")
-				Result.append (a_start.out)
+				Result.append (start.out)
 				Result.append (", ")
-				Result.append (a_rows.out)
+				Result.append (rows.out)
 			end
 		end
 
@@ -153,7 +153,7 @@ feature --Build Query
 			end
 		end
 
-	args_without_limits: ARRAYED_LIST[detachable ANY]
+	args_without_limits: ARRAYED_LIST [detachable ANY]
 		do
 			create Result.make (0)
 			if attached table as a then
@@ -172,19 +172,36 @@ feature --Build Query
 			end
 		end
 
-	args: ARRAYED_LIST[detachable ANY]
+	args: ARRAYED_LIST [detachable ANY]
 		do
 			Result := args_without_limits
 		end
 
 feature
 
-	run (database: SQLITE_DATABASE): SQLITE_STATEMENT_ITERATION_CURSOR
+	run (database: SQLITE_DATABASE): LIST [T]
 		local
+			list: LINKED_LIST [T]
 			statement: SQLITE_STATEMENT
+			pointer: SQLITE_STATEMENT_ITERATION_CURSOR
 		do
 			create statement.make (query + ";", database)
-			Result := statement.execute_new_with_arguments (args)
+			if args.is_empty then
+				pointer := statement.execute_new
+			else
+				pointer := statement.execute_new_with_arguments (args)
+			end
+			create list.make
+			if attached query as a_query then
+				if attached fields as f then
+					across
+						pointer as row
+					loop
+						list.extend (create {T}.make_from_sqlite_result_row (row.item, f))
+					end
+				end
+			end
+			Result := list
 		end
 
 	count_total (database: SQLITE_DATABASE): INTEGER

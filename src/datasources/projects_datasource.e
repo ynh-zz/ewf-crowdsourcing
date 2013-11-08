@@ -34,10 +34,10 @@ feature
 	build_query
 		local
 			cond: SQL_CONDITIONS
-			a_query: SQL_QUERY
+			a_query: SQL_QUERY [SQL_ENTITY]
 		do
 			create a_query.make ("projects")
-			a_query.set_fields (<<["id", "projects.id"], ["title", "projects.title"], ["cname", "categories.name"], ["image","'http://www.amazingplacesonearth.com/wp-content/uploads/2012/10/Eiffel-Tower-22.jpg'"]>>)
+			a_query.set_fields (<<["id", "projects.id"], ["title", "projects.title"], ["cname", "categories.name"], ["image", "'http://www.amazingplacesonearth.com/wp-content/uploads/2012/10/Eiffel-Tower-22.jpg'"]>>)
 			a_query.left_join ("categories", "categories.id = category_id")
 			create cond.make_condition ("AND")
 			a_query.set_where (cond)

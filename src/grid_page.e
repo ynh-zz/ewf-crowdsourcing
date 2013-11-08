@@ -20,6 +20,9 @@ create
 feature
 
 	initialize_controls
+		local
+			categories: SQL_QUERY[SQL_ENTITY]
+			cities: SQL_QUERY[SQL_ENTITY]
 		do
 			Precursor
 			main_control.add_column (8)
@@ -33,16 +36,29 @@ feature
 			main_control.add_control (2, search_query)
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h4", "", "Category"))
 			create category_list.make
-			category_list.add_button (agent choose_category(1), "Any")
-			category_list.add_button (agent choose_category(2), "Technology")
-			category_list.add_button (agent choose_category(3), "Software")
-			category_list.add_button (agent choose_category(4), "Art")
+				--Load categories
+			create categories.make ("categories")
+			categories.set_fields (<<["id"], ["name"]>>)
+			across
+				categories.run (database) as c
+			loop
+				if attached c.item["name"] as val then
+					category_list.add_button (agent choose_category(c.cursor_index), val.out)
+				end
+			end
 			main_control.add_control (2, category_list)
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h4", "", "Country"))
 			create navlist.make
-			navlist.add_button (agent choose_country(1), "Switzerland")
-			navlist.add_button (agent choose_country(2), "Germany")
-			navlist.add_button (agent choose_country(3), "France")
+			-- Cities
+			create cities.make ("cities")
+			cities.set_fields (<<["id"], ["name"]>>)
+			across
+				cities.run (database) as c
+			loop
+				if attached c.item["name"] as name then
+					navlist.add_button (agent choose_country(c.cursor_index), name.out)
+				end
+			end
 			main_control.add_control (2, navlist)
 			create grid.make (datasource)
 			main_control.add_control (1, grid)

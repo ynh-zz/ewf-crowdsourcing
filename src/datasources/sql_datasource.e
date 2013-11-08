@@ -28,7 +28,7 @@ feature
 			attached query
 		end
 
-	data: ITERABLE [T]
+	data: LIST [T]
 		local
 			list: LINKED_LIST [T]
 		do
@@ -36,23 +36,17 @@ feature
 				build_query
 			end
 			create list.make
+			Result := list
 			if attached query as a_query then
 				a_query.set_limit (page * page_size - page_size, page_size)
-				if attached a_query.fields as fields then
-					across
-						a_query.run (database) as row
-					loop
-						list.extend (create {T}.make_from_sqlite_result_row (row.item, fields))
-					end
-				end
+				Result := a_query.run (database)
 				row_count := a_query.count_total (database)
 			end
-			Result := list
 		end
 
 feature
 
-	query: detachable SQL_QUERY
+	query: detachable SQL_QUERY[T]
 
 	database: SQLITE_DATABASE
 
