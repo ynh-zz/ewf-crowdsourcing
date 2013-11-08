@@ -30,37 +30,37 @@ feature
 
 	equals (a_field: STRING; a_value: ANY)
 		do
-			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "=", a_value))
+			add (create {SQL_BASE_CONDITON}.make (a_field, "=", a_value))
 		end
 
 	not_equals (a_field: STRING; a_value: ANY)
 		do
-			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "!=", a_value))
+			add (create {SQL_BASE_CONDITON}.make (a_field, "!=", a_value))
 		end
 
 	less_than (a_field: STRING; a_value: ANY)
 		do
-			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "<", a_value))
+			add (create {SQL_BASE_CONDITON}.make (a_field, "<", a_value))
 		end
 
 	less_or_equal_than (a_field: STRING; a_value: ANY)
 		do
-			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "<=", a_value))
+			add (create {SQL_BASE_CONDITON}.make (a_field, "<=", a_value))
 		end
 
 	greater_than (a_field: STRING; a_value: ANY)
 		do
-			list.extend (create {SQL_BASE_CONDITON}.make (a_field, ">", a_value))
+			add (create {SQL_BASE_CONDITON}.make (a_field, ">", a_value))
 		end
 
 	greater_or_equal_than (a_field: STRING; a_value: ANY)
 		do
-			list.extend (create {SQL_BASE_CONDITON}.make (a_field, ">=", a_value))
+			add (create {SQL_BASE_CONDITON}.make (a_field, ">=", a_value))
 		end
 
 	sql_like (a_field: STRING; a_value: STRING)
 		do
-			list.extend (create {SQL_BASE_CONDITON}.make (a_field, "like", a_value))
+			add (create {SQL_BASE_CONDITON}.make (a_field, "like", a_value))
 		end
 
 	contains (a_field: STRING; a_value: STRING)
@@ -76,6 +76,11 @@ feature
 	end_with (a_field: STRING; a_value: STRING)
 		do
 			sql_like (a_field, "%%" + a_value)
+		end
+
+	add (i: SQL_CONDITION)
+		do
+			list.extend (i)
 		end
 
 	item alias "[]" (key: STRING): SQL_CONDITON_HELPER
@@ -100,7 +105,7 @@ feature
 			end
 		end
 
-	args: ARRAYED_LIST[detachable ANY]
+	args: ARRAYED_LIST [detachable ANY]
 		do
 			create Result.make (0)
 			across

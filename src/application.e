@@ -107,7 +107,7 @@ feature -- Execution
 
 	execute_grid (request: WSF_REQUEST; response: WSF_RESPONSE)
 		local
-			page: GRID_PAGE
+			page: PROJECTS_PAGE
 		do
 			create page.make (database, request, response)
 			page.execute

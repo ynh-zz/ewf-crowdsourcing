@@ -34,6 +34,7 @@ feature {NONE}
 				if attached {READABLE_STRING_GENERAL} f.item.at (1) as s then
 					data.put (value, s)
 				end
+
 			end
 		end
 

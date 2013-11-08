@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	GRID_PAGE
+	PROJECTS_PAGE
 
 inherit
 
@@ -21,8 +21,8 @@ feature
 
 	initialize_controls
 		local
-			categories: SQL_QUERY[SQL_ENTITY]
-			cities: SQL_QUERY[SQL_ENTITY]
+			categories: SQL_QUERY [SQL_ENTITY]
+			cities: SQL_QUERY [SQL_ENTITY]
 		do
 			Precursor
 			main_control.add_column (8)
@@ -42,21 +42,22 @@ feature
 			across
 				categories.run (database) as c
 			loop
-				if attached c.item["name"] as val then
-					category_list.add_button (agent choose_category(c.cursor_index), val.out)
+				if attached c.item ["name"] as val and attached {INTEGER_64} c.item ["id"] as id then
+					category_list.add_button (agent choose_category(c.cursor_index, id), val.out)
 				end
 			end
 			main_control.add_control (2, category_list)
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h4", "", "Country"))
 			create navlist.make
-			-- Cities
+			navlist.add_button (agent choose_country(1, 0), "All")
+				-- Cities
 			create cities.make ("cities")
 			cities.set_fields (<<["id"], ["name"]>>)
 			across
 				cities.run (database) as c
 			loop
-				if attached c.item["name"] as name then
-					navlist.add_button (agent choose_country(c.cursor_index), name.out)
+				if attached c.item ["name"] as name and attached {INTEGER_64} c.item ["id"] as id then
+					navlist.add_button (agent choose_country(c.cursor_index+1, id), name.out)
 				end
 			end
 			main_control.add_control (2, navlist)
@@ -65,22 +66,26 @@ feature
 			navbar.set_active (2)
 		end
 
-	choose_country (i: INTEGER)
+	choose_country (i: INTEGER; id: INTEGER_64)
 		do
 			across
 				navlist.controls as it
 			loop
 				it.item.set_active (it.cursor_index = i)
 			end
+			datasource.set_country (id)
+			datasource.update
 		end
 
-	choose_category (i: INTEGER)
+	choose_category (i: INTEGER; id: INTEGER_64)
 		do
 			across
 				category_list.controls as it
 			loop
 				it.item.set_active (it.cursor_index = i)
 			end
+			datasource.set_category (id)
+			datasource.update
 		end
 
 	change_query
@@ -92,6 +97,8 @@ feature
 
 	process
 		do
+			choose_category(1,1)
+			choose_country(1,0)
 		end
 
 	grid: PROJECTS_REPEATER
