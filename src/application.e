@@ -80,6 +80,7 @@ feature -- Router and Filter
 		do
 			map_agent_uri ("/", agent execute_hello, Void)
 			map_agent_uri ("/projects", agent execute_projects, Void)
+			map_agent_uri_template ("/project/{project_id}", agent execute_project_details, Void)
 
 				-- NOTE: you could put all those files in a specific folder, and use WSF_FILE_SYSTEM_HANDLER with "/"
 				-- this way, it handles the caching and so on
@@ -91,6 +92,10 @@ feature -- Helper: mapping
 	map_agent_uri (a_uri: READABLE_STRING_8; a_action: like {WSF_URI_AGENT_HANDLER}.action; rqst_methods: detachable WSF_REQUEST_METHODS)
 		do
 			router.map_with_request_methods (create {WSF_URI_MAPPING}.make (a_uri, create {WSF_URI_AGENT_HANDLER}.make (a_action)), rqst_methods)
+		end
+	map_agent_uri_template (a_uri: READABLE_STRING_8; a_action: like {WSF_URI_TEMPLATE_AGENT_HANDLER}.action; rqst_methods: detachable WSF_REQUEST_METHODS)
+		do
+			router.map_with_request_methods (create {WSF_URI_TEMPLATE_MAPPING}.make (a_uri, create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (a_action)), rqst_methods)
 		end
 
 feature -- Execution
@@ -108,6 +113,14 @@ feature -- Execution
 	execute_projects (request: WSF_REQUEST; response: WSF_RESPONSE)
 		local
 			page: PROJECTS_PAGE
+		do
+			create page.make (database, request, response)
+			page.execute
+		end
+
+	execute_project_details (request: WSF_REQUEST; response: WSF_RESPONSE)
+		local
+			page: DETAIL_PAGE
 		do
 			create page.make (database, request, response)
 			page.execute

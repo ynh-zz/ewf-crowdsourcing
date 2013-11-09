@@ -204,6 +204,12 @@ feature
 			Result := list
 		end
 
+	first (database: SQLITE_DATABASE): T
+		do
+			set_limit (0, 1)
+			Result := run (database).at (1)
+		end
+
 	count_total (database: SQLITE_DATABASE): INTEGER
 		local
 			statement: SQLITE_STATEMENT

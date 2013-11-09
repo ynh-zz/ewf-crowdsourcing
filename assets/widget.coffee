@@ -308,10 +308,10 @@ class WSF_PAGE_CONTROL extends WSF_CONTROL
     @$el.remove()
     
 class WSF_SLIDER_CONTROL extends WSF_CONTROL
-  requirements: ['assets/bootstrap.min.js']
+  requirements: ['/assets/bootstrap.min.js']
 
 class WSF_DROPDOWN_CONTROL extends WSF_CONTROL
-  requirements: ['assets/bootstrap.min.js']
+  requirements: ['/assets/bootstrap.min.js']
 
 controls = {}
 
@@ -371,8 +371,8 @@ class WSF_CODEVIEW_CONTROL extends WSF_INPUT_CONTROL
   constructor:()->
     super
     #load codemirror and then eiffel syntax
-    @initialize = lazy_load ['assets/codemirror/codemirror.js','assets/codemirror/codemirror.css','assets/codemirror/estudio.css'],
-                            (lazy_load ['assets/codemirror/eiffel.js'], @attach_events, @), 
+    @initialize = lazy_load ['/assets/codemirror/codemirror.js','/assets/codemirror/codemirror.css','/assets/codemirror/estudio.css'],
+                            (lazy_load ['/assets/codemirror/eiffel.js'], @attach_events, @), 
                             @
 
   attach_events: () ->
@@ -595,7 +595,7 @@ class WSF_REPEATER_CONTROL extends WSF_CONTROL
 show_alert = (action)->
     alert(action.message)
 
-start_modal = lazy_load ['assets/bootstrap.min.js'], (action)->
+start_modal = lazy_load ['/assets/bootstrap.min.js'], (action)->
   cssclass = ""
   if action.type == "start_modal_big"
     cssclass = " big"

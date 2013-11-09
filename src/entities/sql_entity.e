@@ -19,8 +19,7 @@ feature {NONE}
 	make_from_sqlite_result_row (row: SQLITE_RESULT_ROW; a_fields: ARRAY [TUPLE])
 		local
 			index: NATURAL_32
-			value: detachable ANY
-			l_type: INTEGER_32
+			value: detachable ANY 
 		do
 			create data.make (row.count.as_integer_32)
 			across
@@ -34,7 +33,6 @@ feature {NONE}
 				if attached {READABLE_STRING_GENERAL} f.item.at (1) as s then
 					data.put (value, s)
 				end
-
 			end
 		end
 
@@ -49,6 +47,15 @@ feature -- Access
 		do
 			if data.has (a_field) then
 				Result := data [a_field]
+			end
+		end
+
+	get_string (a_field: READABLE_STRING_GENERAL): STRING
+		do
+			if attached {STRING} item (a_field) as str then
+				Result := str
+			else
+				create Result.make_empty
 			end
 		end
 
