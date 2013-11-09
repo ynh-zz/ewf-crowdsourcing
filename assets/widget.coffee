@@ -309,6 +309,12 @@ class WSF_PAGE_CONTROL extends WSF_CONTROL
     
 class WSF_SLIDER_CONTROL extends WSF_CONTROL
   requirements: ['/assets/bootstrap.min.js']
+  attach_events: ()->
+    super
+    id = "slider"+Math.round(Math.random()*10000) 
+    @$el.attr("id",id)
+    @$el.find("ol li").attr("data-target","#"+id)
+    @$el.find(".carousel-control").attr("href","#"+id)
 
 class WSF_DROPDOWN_CONTROL extends WSF_CONTROL
   requirements: ['/assets/bootstrap.min.js']

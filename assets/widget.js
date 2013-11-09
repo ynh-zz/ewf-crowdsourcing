@@ -492,6 +492,15 @@ WSF_SLIDER_CONTROL = (function(_super) {
 
   WSF_SLIDER_CONTROL.prototype.requirements = ['/assets/bootstrap.min.js'];
 
+  WSF_SLIDER_CONTROL.prototype.attach_events = function() {
+    var id;
+    WSF_SLIDER_CONTROL.__super__.attach_events.apply(this, arguments);
+    id = "slider" + Math.round(Math.random() * 10000);
+    this.$el.attr("id", id);
+    this.$el.find("ol li").attr("data-target", "#" + id);
+    return this.$el.find(".carousel-control").attr("href", "#" + id);
+  };
+
   return WSF_SLIDER_CONTROL;
 
 })(WSF_CONTROL);
