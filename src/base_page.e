@@ -49,6 +49,7 @@ feature
 feature --DB
 
 	database: SQLITE_DATABASE
+
 	navbar: WSF_NAVBAR_CONTROL
 
 end
