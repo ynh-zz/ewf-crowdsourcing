@@ -204,10 +204,15 @@ feature
 			Result := list
 		end
 
-	first (database: SQLITE_DATABASE): T
+	first (database: SQLITE_DATABASE): detachable T
+		local
+			list: LIST [T]
 		do
 			set_limit (0, 1)
-			Result := run (database).at (1)
+			list := run (database)
+			if not list.is_empty then
+				Result := list.at (1)
+			end
 		end
 
 	count_total (database: SQLITE_DATABASE): INTEGER

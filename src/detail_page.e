@@ -36,8 +36,9 @@ feature {NONE}
 			media_query: SQL_QUERY [SQL_ENTITY]
 		do
 			create project_query.make ("projects")
-			project_query.set_fields (<<["title"], ["description"], ["start"], ["end"], ["funding", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id)"], ["backers", "(SELECT COUNT( DISTINCT user_id ) FROM fundings WHERE project_id = projects.id)"], ["next_goal", "(SELECT amount FROM goals WHERE project_id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) limit 0,1)"]>>)
-			project_query.set_where ("id = " + project_id.out)
+			project_query.set_fields (<<["title"], ["description", "projects.description"], ["start"], ["end"], ["username"],["user_description", "users.description"], ["avatar", "email"], ["funding", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id)"], ["backers", "(SELECT COUNT( DISTINCT user_id ) FROM fundings WHERE project_id = projects.id)"], ["next_goal", "(SELECT amount FROM goals WHERE project_id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) limit 0,1)"]>>)
+			project_query.set_where ("projects.id = " + project_id.out)
+			project_query.left_join ("users", "users.id = user_id")
 			project := project_query.first (database)
 
 				--Load Media
@@ -72,14 +73,15 @@ feature -- Initialization
 					slider.add_image (m.item.get_string ("url"), "")
 				end
 			end
-			--Build Goals
+				--Build Goals
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h3", "", "Goals"))
 			create goals_datasource.make_default (database, project_id)
 			create goals.make (goals_datasource)
 			main_control.add_control (2, goals)
-			--Build Info box
+				--Build Info box
 			initialize_infobox
-			--Build Rewards
+			initialize_userbox
+				--Build Rewards
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h3", "", "Rewards"))
 			create rewards_datasource.make_default (database, project_id)
 			create rewards.make (rewards_datasource)
@@ -105,6 +107,22 @@ feature -- Initialization
 				body.append (render_tag_with_tagname ("h1", "" + days.out, "", ""))
 				body.append (render_tag_with_tagname ("h5", "days to go", "", ""))
 				main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("div", "class=%"well%"", body))
+			end
+		end
+
+	initialize_userbox
+		local
+			box: STRING
+			body: STRING
+		do
+			if attached project as a_project then
+				create box.make_empty
+				box.append (render_tag_with_tagname ("a", render_tag_with_tagname ("img", "", "style=%"max-width: 200px;%" src=%"http://www.gravatar.com/avatar/" + a_project.get_string ("avatar") + "?d=identicon&f=y%"", "media-object"), "href=%"#%"", "pull-left thumbnail"))
+				create body.make_empty
+				body.append (render_tag_with_tagname ("h3", a_project.get_string ("username"), "", "media-heading"))
+				body.append (a_project.get_string ("user_description"))
+				box.append (render_tag_with_tagname ("div", body, "", "media-body"))
+				main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("div", "class=%"media%"", box))
 			end
 		end
 
