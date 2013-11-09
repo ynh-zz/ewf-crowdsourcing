@@ -21,20 +21,12 @@ feature
 			body: STRING
 		do
 			Result := ""
-			if attached {INTEGER_64} item ["id"] as id then
-				if attached {STRING} item ["image"] as image then
-					Result.append (render_tag_with_tagname ("a", render_tag_with_tagname ("img", "", "style=%"max-width: 200px;%" src=%"" + image + "%"", "media-object"), "href=%"/project/" + id.out + "%"", "pull-left thumbnail"))
-				end
-				body := ""
-				if attached {STRING} item ["title"] as title then
-					body.append (render_tag_with_tagname ("a", render_tag_with_tagname ("h3", title, "", "media-heading"), "href=%"/project/" + id.out + "%"",""))
-				end
-				if attached {STRING} item ["description"] as description then
-					body.append (description)
-				end
-				Result.append (render_tag_with_tagname ("div", body, "", "media-body"))
-				Result := render_tag_with_tagname ("div", Result, "", "media") + "<hr />"
-			end
+			Result.append (render_tag_with_tagname ("a", render_tag_with_tagname ("img", "", "style=%"max-width: 200px;%" src=%"" + item.get_string ("image") + "%"", "media-object"), "href=%"/project/" + item.get_integer ("id").out + "%"", "pull-left thumbnail"))
+			body := ""
+			body.append (render_tag_with_tagname ("a", render_tag_with_tagname ("h3", item.get_string ("title"), "", "media-heading"), "href=%"/project/" + item.get_integer ("id").out + "%"", ""))
+			body.append (item.get_string ("description"))
+			Result.append (render_tag_with_tagname ("div", body, "", "media-body"))
+			Result := render_tag_with_tagname ("div", Result, "", "media") + "<hr />"
 		end
 
 end

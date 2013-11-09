@@ -19,7 +19,7 @@ feature {NONE}
 	make_from_sqlite_result_row (row: SQLITE_RESULT_ROW; a_fields: ARRAY [TUPLE])
 		local
 			index: NATURAL_32
-			value: detachable ANY 
+			value: detachable ANY
 		do
 			create data.make (row.count.as_integer_32)
 			across
@@ -56,6 +56,18 @@ feature -- Access
 				Result := str
 			else
 				create Result.make_empty
+			end
+		end
+	get_integer (a_field: READABLE_STRING_GENERAL): INTEGER_64
+		do
+			if attached {INTEGER_64} item (a_field) as int then
+				Result := int
+			end
+		end
+	get_real (a_field: READABLE_STRING_GENERAL): REAL_64
+		do
+			if attached {REAL_64} item (a_field) as real then
+				Result := real
 			end
 		end
 

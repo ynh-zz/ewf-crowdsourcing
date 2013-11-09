@@ -5,16 +5,18 @@ note
 	revision: "$Revision$"
 
 deferred class
-	SQL_DATASOURCE [T -> SQL_ENTITY create make_from_sqlite_result_row end]
+	SQL_PAGABLE_DATASOURCE [T -> SQL_ENTITY create make_from_sqlite_result_row end]
 
 inherit
 
-	WSF_DATASOURCE [T]
+	WSF_PAGABLE_DATASOURCE [T]
 
 feature {NONE}
 
 	make (db: SQLITE_DATABASE)
 		do
+			page := 1
+			page_size := 10
 			database := db
 		end
 
@@ -36,7 +38,9 @@ feature
 			create list.make
 			Result := list
 			if attached query as a_query then
+				a_query.set_limit (page * page_size - page_size, page_size)
 				Result := a_query.run (database)
+				row_count := a_query.count_total (database)
 			end
 		end
 

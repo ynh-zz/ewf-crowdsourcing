@@ -9,7 +9,7 @@ class
 
 inherit
 
-	SQL_DATASOURCE [SQL_ENTITY]
+	SQL_PAGABLE_DATASOURCE [SQL_ENTITY]
 		redefine
 			state,
 			set_state
@@ -18,14 +18,14 @@ inherit
 create
 	make_default
 
-feature
+feature{NONE}
 
 	make_default (db: SQLITE_DATABASE)
 		do
 			make (db)
 			search_text := ""
 		end
-
+feature
 	set_query (q: STRING)
 		do
 			search_text := q

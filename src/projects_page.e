@@ -123,10 +123,10 @@ feature
 		end
 
 	grid: PROJECTS_REPEATER
+	datasource: PROJECTS_DATASOURCE
 
 	search_query: WSF_INPUT_CONTROL
 
-	datasource: PROJECTS_DATASOURCE
 
 	navlist: WSF_NAVLIST_CONTROL
 
