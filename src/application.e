@@ -79,7 +79,7 @@ feature -- Router and Filter
 	setup_router
 		do
 			map_agent_uri ("/", agent execute_hello, Void)
-			map_agent_uri ("/grid", agent execute_grid, Void)
+			map_agent_uri ("/projects", agent execute_projects, Void)
 
 				-- NOTE: you could put all those files in a specific folder, and use WSF_FILE_SYSTEM_HANDLER with "/"
 				-- this way, it handles the caching and so on
@@ -105,7 +105,7 @@ feature -- Execution
 			page.execute
 		end
 
-	execute_grid (request: WSF_REQUEST; response: WSF_RESPONSE)
+	execute_projects (request: WSF_REQUEST; response: WSF_RESPONSE)
 		local
 			page: PROJECTS_PAGE
 		do

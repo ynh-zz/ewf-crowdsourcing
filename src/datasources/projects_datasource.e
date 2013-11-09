@@ -45,18 +45,40 @@ feature
 		local
 			cond: SQL_CONDITIONS
 			a_query: SQL_QUERY [SQL_ENTITY]
+			thumbnails: SQL_QUERY [SQL_ENTITY]
+			thumbnails_cond: SQL_CONDITIONS
 		do
+				-- Subquery selecting one thumbnail per project
+			create thumbnails.make ("media")
+			thumbnails.set_fields (<<["url"], ["project_id"]>>)
+			create thumbnails_cond.make_condition ("AND")
+			thumbnails.set_where (thumbnails_cond)
+			thumbnails_cond ["tag"].equals ("thumbnail")
+			thumbnails.set_order_by ("project_id")
+			thumbnails.set_alias ("thumbnail")
+
+				--Load project with thumbnails
 			create a_query.make ("projects")
-			a_query.set_fields (<<["id", "projects.id"], ["title", "projects.title"], ["cname", "categories.name"], ["image", "'http://www.amazingplacesonearth.com/wp-content/uploads/2012/10/Eiffel-Tower-22.jpg'"]>>)
+			a_query.set_fields (<<["id", "projects.id"], ["title", "projects.title"], ["cname", "categories.name"], ["image", "thumbnail.url"]>>)
+				--Left join category table
 			a_query.left_join ("categories", "categories.id = category_id")
+				--Left join thumbnail subquery
+			a_query.left_join (thumbnails, "projects.id = thumbnail.project_id")
 			create cond.make_condition ("AND")
 			a_query.set_where (cond)
-			cond ["projects.title"].contains (search_text)
-			cond ["projects.id"].greater_than (100)
+
+				-- Filter projects by search text
+			if not search_text.is_empty then
+				cond ["projects.title"].contains (search_text)
+			end
+
+				-- Filter category by using the nested set model http://en.wikipedia.org/wiki/Nested_set_model
 			cond.add ("categories.left >= (SELECT left FROM categories as c WHERE c.id = " + category.out + ")")
 			cond.add ("categories.right <= (SELECT right FROM categories as c WHERE c.id = " + category.out + ")")
+
+				-- Filter by city
 			if city /= 0 then
-				cond ["projects.city_id"].equals(city)
+				cond ["projects.city_id"].equals (city)
 			end
 			query := a_query
 		end
