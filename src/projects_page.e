@@ -29,6 +29,14 @@ feature
 			build_sidebar
 		end
 
+	build_grid
+		do
+			create datasource.make_default (database)
+			create grid.make (datasource)
+			main_control.add_control (1, create {WSF_BASIC_CONTROL}.make_with_body ("h1", "", "Projects"))
+			main_control.add_control (1, grid)
+		end
+
 	build_sidebar
 		do
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h3", "", "Search"))
@@ -79,14 +87,6 @@ feature
 			main_control.add_control (2, navlist)
 		end
 
-	build_grid
-		do
-			create datasource.make_default (database)
-			create grid.make (datasource)
-			main_control.add_control (1, create {WSF_BASIC_CONTROL}.make_with_body ("h3", "", "Projects"))
-			main_control.add_control (1, grid)
-		end
-
 	choose_city (i: INTEGER; id: INTEGER_64)
 		do
 			across
@@ -123,10 +123,10 @@ feature
 		end
 
 	grid: PROJECTS_REPEATER
+
 	datasource: PROJECTS_DATASOURCE
 
 	search_query: WSF_INPUT_CONTROL
-
 
 	navlist: WSF_NAVLIST_CONTROL
 

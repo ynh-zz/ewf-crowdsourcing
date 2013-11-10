@@ -79,6 +79,7 @@ feature -- Router and Filter
 	setup_router
 		do
 			map_agent_uri ("/", agent execute_hello, Void)
+			map_agent_uri ("/signup", agent execute_signup, Void)
 			map_agent_uri ("/projects", agent execute_projects, Void)
 			map_agent_uri_template ("/project/{project_id}", agent execute_project_details, Void)
 
@@ -93,6 +94,7 @@ feature -- Helper: mapping
 		do
 			router.map_with_request_methods (create {WSF_URI_MAPPING}.make (a_uri, create {WSF_URI_AGENT_HANDLER}.make (a_action)), rqst_methods)
 		end
+
 	map_agent_uri_template (a_uri: READABLE_STRING_8; a_action: like {WSF_URI_TEMPLATE_AGENT_HANDLER}.action; rqst_methods: detachable WSF_REQUEST_METHODS)
 		do
 			router.map_with_request_methods (create {WSF_URI_TEMPLATE_MAPPING}.make (a_uri, create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (a_action)), rqst_methods)
@@ -106,6 +108,14 @@ feature -- Execution
 		do
 				-- To send a response we need to setup, the status code and
 				-- the response headers.
+			create page.make (database, request, response)
+			page.execute
+		end
+
+	execute_signup (request: WSF_REQUEST; response: WSF_RESPONSE)
+		local
+			page: SIGNUP_PAGE
+		do
 			create page.make (database, request, response)
 			page.execute
 		end

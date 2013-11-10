@@ -44,6 +44,7 @@ feature
 	build_query
 		local
 			cond: SQL_CONDITIONS
+			orcond: SQL_CONDITIONS
 			a_query: SQL_QUERY [SQL_ENTITY]
 			thumbnails: SQL_QUERY [SQL_ENTITY]
 			thumbnails_cond: SQL_CONDITIONS
@@ -69,7 +70,11 @@ feature
 
 				-- Filter projects by search text
 			if not search_text.is_empty then
-				cond ["projects.title"].contains (search_text)
+				create orcond.make_condition ("OR")
+				orcond ["projects.title"].contains (search_text)
+				orcond ["projects.description"].contains (search_text)
+
+				cond.add (orcond)
 			end
 
 				-- Filter category by using the nested set model http://en.wikipedia.org/wiki/Nested_set_model

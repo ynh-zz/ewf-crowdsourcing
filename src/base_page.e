@@ -35,6 +35,7 @@ feature
 			create navbar.make_with_brand ("EWF Crowd Sourcing")
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/%"", "Home"))
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/projects%"", "Project grid"))
+			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/signup%"", "Sign Up"))
 			if not attached get_parameter ("ajax") then
 				control.add_control (navbar)
 			end
