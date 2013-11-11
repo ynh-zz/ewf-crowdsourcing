@@ -47,7 +47,7 @@ feature
 
 				--Load project with thumbnails
 			create a_query.make ("projects")
-			a_query.set_fields (<<["id", "projects.id"], ["title", "projects.title"], ["cname", "categories.name"], ["image", "thumbnail.url"], ["percentage", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) /(SELECT amount FROM goals WHERE projects.id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id limit 0,1))"]>>)
+			a_query.set_fields (<<["id", "projects.id"],["description","projects.description"], ["title", "projects.title"], ["cname", "categories.name"], ["image", "thumbnail.url"], ["percentage", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) /(SELECT amount FROM goals WHERE projects.id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id limit 0,1))"]>>)
 				--Left join category table
 			a_query.left_join ("categories", "categories.id = category_id")
 				--Left join thumbnail subquery
