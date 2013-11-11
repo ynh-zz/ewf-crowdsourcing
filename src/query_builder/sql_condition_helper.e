@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {SQL_CONDITON_HELPER}."
+	description: "Summary description for {SQL_CONDITION_HELPER}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SQL_CONDITON_HELPER
+	SQL_CONDITION_HELPER
 
 create
 	make

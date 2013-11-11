@@ -18,28 +18,15 @@ inherit
 create
 	make_default
 
-feature{NONE}
+feature {NONE}
 
 	make_default (db: SQLITE_DATABASE)
 		do
 			make (db)
 			search_text := ""
 		end
+
 feature
-	set_query (q: STRING)
-		do
-			search_text := q
-		end
-
-	set_city (id: INTEGER_64)
-		do
-			city := id
-		end
-
-	set_category (id: INTEGER_64)
-		do
-			category := id
-		end
 
 	build_query
 		local
@@ -60,7 +47,7 @@ feature
 
 				--Load project with thumbnails
 			create a_query.make ("projects")
-			a_query.set_fields (<<["id", "projects.id"], ["title", "projects.title"], ["cname", "categories.name"], ["image", "thumbnail.url"],["percentage","(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) /(SELECT amount FROM goals WHERE projects.id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id limit 0,1))"]>>)
+			a_query.set_fields (<<["id", "projects.id"], ["title", "projects.title"], ["cname", "categories.name"], ["image", "thumbnail.url"], ["percentage", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) /(SELECT amount FROM goals WHERE projects.id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id limit 0,1))"]>>)
 				--Left join category table
 			a_query.left_join ("categories", "categories.id = category_id")
 				--Left join thumbnail subquery
@@ -73,7 +60,6 @@ feature
 				create orcond.make_condition ("OR")
 				orcond ["projects.title"].contains (search_text)
 				orcond ["projects.description"].contains (search_text)
-
 				cond.add (orcond)
 			end
 
@@ -88,11 +74,28 @@ feature
 			query := a_query
 		end
 
-	search_text: STRING
+feature -- Additional state information
 
-	city: INTEGER_64
+	set_query (q: STRING)
+		do
+			search_text := q
+		end
 
-	category: INTEGER_64
+	set_city (id: INTEGER_64)
+		do
+			city := id
+		end
+
+	set_category (id: INTEGER_64)
+		do
+			category := id
+		end
+
+	search_text: STRING assign set_query
+
+	city: INTEGER_64 assign set_city
+
+	category: INTEGER_64 assign set_category
 
 feature {WSF_PAGE_CONTROL, WSF_CONTROL} -- State management
 

@@ -27,6 +27,19 @@ feature {NONE}
 
 feature
 
+	args: ARRAYED_LIST [detachable ANY]
+		do
+			Result := concatenation (table.args, condition.args)
+		end
+
+	type: STRING
+
+	table: SQL_TABLE_DEFINITION
+
+	condition: SQL_CONDITION
+
+feature {SQL_QUERY} -- Query to string convertion
+
 	query: STRING
 		do
 			create Result.make_empty
@@ -37,16 +50,5 @@ feature
 			Result.append (condition.expr)
 			Result.append (")")
 		end
-
-	args:  ARRAYED_LIST[detachable ANY]
-		do
-			Result := concatenation (table.args, condition.args)
-		end
-
-	type: STRING
-
-	table: SQL_TABLE_DEFINITION
-
-	condition: SQL_CONDITION
 
 end

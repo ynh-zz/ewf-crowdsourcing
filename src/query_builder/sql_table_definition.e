@@ -26,7 +26,7 @@ feature {NONE}
 			table_alias := a_table_alias
 		end
 
-feature
+feature 
 
 	table_name: detachable STRING
 
@@ -37,19 +37,12 @@ feature
 			table_alias := a_table_alias
 		end
 
-	table_definition: STRING
+	args: ARRAYED_LIST [detachable ANY]
 		do
-			create Result.make_empty
-			if attached table_name as t then
-				Result.append (t)
-				if attached table_alias as a_table_alias then
-					Result.append (" as ")
-					Result.append (a_table_alias)
-				end
-			end
+			create Result.make (0)
 		end
 
-feature
+feature {SQL_QUERY, SQL_JOIN_DEFINITION} -- Query to string convertion
 
 	query: STRING
 		do
@@ -65,9 +58,16 @@ feature
 			end
 		end
 
-	args: ARRAYED_LIST[detachable ANY]
+	table_definition: STRING
 		do
-			create Result.make (0)
+			create Result.make_empty
+			if attached table_name as t then
+				Result.append (t)
+				if attached table_alias as a_table_alias then
+					Result.append (" as ")
+					Result.append (a_table_alias)
+				end
+			end
 		end
 
 end

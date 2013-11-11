@@ -39,7 +39,7 @@ feature
 			a_query.set_order_by ("amount asc")
 			query := a_query
 		end
-
+feature -- Additional state information
 	project_id: INTEGER_64
 
 end

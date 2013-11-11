@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	SQL_BASE_CONDITON
+	SQL_BASE_CONDITION
 
 inherit
 

@@ -32,7 +32,7 @@ feature {NONE}
 			create joins.make (0)
 		end
 
-feature
+feature -- Query composition
 
 	set_table (subquery: SQL_TABLE_DEFINITION)
 		do
@@ -80,7 +80,7 @@ feature
 			joins.extend (create {SQL_JOIN_DEFINITION}.make ("OUTER JOIN", td, cond))
 		end
 
-feature --Build Query
+feature {NONE} -- Query to string convertion
 
 	query_without_limit: STRING
 		require
@@ -130,6 +130,7 @@ feature --Build Query
 			end
 		end
 
+
 	query: STRING
 		do
 			Result := query_without_limit
@@ -177,7 +178,7 @@ feature --Build Query
 			Result := args_without_limits
 		end
 
-feature
+feature -- Query execution
 
 	run (database: SQLITE_DATABASE): LIST [T]
 		local

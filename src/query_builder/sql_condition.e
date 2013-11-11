@@ -31,21 +31,23 @@ feature
 
 	static_expr: detachable STRING
 
-	static_args: detachable ARRAYED_LIST[detachable ANY]
+	static_args: detachable ARRAYED_LIST [detachable ANY]
+
+	args: ARRAYED_LIST [detachable ANY]
+		do
+			create Result.make (0)
+			if attached static_args as ar then
+				Result := ar
+			end
+		end
+
+feature -- Query to string convertion
 
 	expr: STRING
 		do
 			create Result.make_empty
 			if attached static_expr as ex then
 				Result := ex
-			end
-		end
-
-	args: ARRAYED_LIST[detachable ANY]
-		do
-			create Result.make (0)
-			if attached static_args as ar then
-				Result := ar
 			end
 		end
 

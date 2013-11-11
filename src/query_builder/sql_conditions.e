@@ -30,37 +30,37 @@ feature
 
 	equals (a_field: STRING; a_value: ANY)
 		do
-			add (create {SQL_BASE_CONDITON}.make (a_field, "=", a_value))
+			add (create {SQL_BASE_CONDITION}.make (a_field, "=", a_value))
 		end
 
 	not_equals (a_field: STRING; a_value: ANY)
 		do
-			add (create {SQL_BASE_CONDITON}.make (a_field, "!=", a_value))
+			add (create {SQL_BASE_CONDITION}.make (a_field, "!=", a_value))
 		end
 
 	less_than (a_field: STRING; a_value: ANY)
 		do
-			add (create {SQL_BASE_CONDITON}.make (a_field, "<", a_value))
+			add (create {SQL_BASE_CONDITION}.make (a_field, "<", a_value))
 		end
 
 	less_or_equal_than (a_field: STRING; a_value: ANY)
 		do
-			add (create {SQL_BASE_CONDITON}.make (a_field, "<=", a_value))
+			add (create {SQL_BASE_CONDITION}.make (a_field, "<=", a_value))
 		end
 
 	greater_than (a_field: STRING; a_value: ANY)
 		do
-			add (create {SQL_BASE_CONDITON}.make (a_field, ">", a_value))
+			add (create {SQL_BASE_CONDITION}.make (a_field, ">", a_value))
 		end
 
 	greater_or_equal_than (a_field: STRING; a_value: ANY)
 		do
-			add (create {SQL_BASE_CONDITON}.make (a_field, ">=", a_value))
+			add (create {SQL_BASE_CONDITION}.make (a_field, ">=", a_value))
 		end
 
 	sql_like (a_field: STRING; a_value: STRING)
 		do
-			add (create {SQL_BASE_CONDITON}.make (a_field, "like", a_value))
+			add (create {SQL_BASE_CONDITION}.make (a_field, "like", a_value))
 		end
 
 	contains (a_field: STRING; a_value: STRING)
@@ -83,10 +83,26 @@ feature
 			list.extend (i)
 		end
 
-	item alias "[]" (key: STRING): SQL_CONDITON_HELPER
+	item alias "[]" (key: STRING): SQL_CONDITION_HELPER
 		do
 			create Result.make (key, Current)
 		end
+
+	args: ARRAYED_LIST [detachable ANY]
+		do
+			create Result.make (0)
+			across
+				list as el
+			loop
+				Result := concatenation (Result, el.item.args)
+			end
+		end
+
+	operator: STRING
+
+	list: ARRAYED_LIST [SQL_CONDITION]
+
+feature  -- Query to string convertion
 
 	expr: STRING
 		do
@@ -104,21 +120,5 @@ feature
 				end
 			end
 		end
-
-	args: ARRAYED_LIST [detachable ANY]
-		do
-			create Result.make (0)
-			across
-				list as el
-			loop
-				Result := concatenation (Result, el.item.args)
-			end
-		end
-
-feature
-
-	operator: STRING
-
-	list: ARRAYED_LIST [SQL_CONDITION]
 
 end

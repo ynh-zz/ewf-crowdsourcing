@@ -29,12 +29,14 @@ feature
 			cond: SQL_CONDITIONS
 			a_query: SQL_QUERY [SQL_ENTITY]
 		do
-
+			-- Select the table goals
 			create a_query.make ("goals")
 			a_query.set_fields (<<["title"],["amount"],["description"],["percentage","(SELECT sum(amount) FROM fundings WHERE project_id = goals.project_id)/amount"]>>)
+ 			-- Filter goals by project id
  			create cond.make_condition ("AND")
 			a_query.set_where (cond)
 			cond ["project_id"].equals (project_id)
+			-- Order goals by ammount
 			a_query.set_order_by ("amount asc")
 			query := a_query
 		end

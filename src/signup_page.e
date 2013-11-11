@@ -63,16 +63,15 @@ feature {NONE}
 
 	check_username (input: STRING): BOOLEAN
 		local
-
 			users_query: SQL_QUERY [SQL_ENTITY]
-			condition:SQL_CONDITIONS
+			condition: SQL_CONDITIONS
 		do
 			create users_query.make ("users")
 			users_query.set_fields (<<["username"]>>)
 			create condition.make_condition ("AND")
-			condition["username"].sql_like(input)
+			condition ["username"].sql_like (input)
 			users_query.set_where (condition)
-			Result:=users_query.count_total (database)=0
+			Result := users_query.count_total (database) = 0
 		end
 
 feature
