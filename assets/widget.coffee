@@ -79,6 +79,7 @@ parseSuggestions = (data)->
         return d
   return null
 loaded = {}
+
 lazy_load = (requirements,fn,that)->
   if requirements.length == 0
     return ()->
@@ -165,6 +166,7 @@ class WSF_CONTROL
       @controls=(build_control(control_name, state, @) for control_name, state of @fullstate.controls)
     else
       @controls = []
+    return
 
   attach_events: ()->
     console.log "Attached #{@control_name}"
@@ -179,13 +181,22 @@ class WSF_CONTROL
   process_actions: (actions)->
     for action in actions
       try
-        fn = eval(action.type)
-        fn(action)
+        fn = null
+        #Check if action exists in class then check global
+        if @[action.type]?
+          fn = @[action.type]
+          fn.call(@, action)
+        else
+          fn = eval(action.type)
+          fn(action)
       catch e
         console.log "Failed preforming action #{action.type}"
+    return
  
   process_update: (new_states)->
     try
+      if new_states.actions?
+        @process_actions(new_states.actions)
       if new_states[@control_name]?
         @update(new_states[@control_name])
         for control in @controls
@@ -195,8 +206,6 @@ class WSF_CONTROL
       return
     return
     
-    
-
   get_context_state : ()->
     if @parent_control? and not @isolation
       return @parent_control.get_context_state()
@@ -249,8 +258,6 @@ class WSF_CONTROL
       cache: no
     .done (new_states)->
       #Update all classes
-      if new_states.actions?
-        self.process_actions(new_states.actions)
       self.get_page().process_update(new_states)
       
   #Simple event listener
@@ -296,7 +303,6 @@ class WSF_PAGE_CONTROL extends WSF_CONTROL
 
     return
     
-
   get_full_control_name: ()->
     ""
 
@@ -334,6 +340,9 @@ class WSF_BUTTON_CONTROL extends WSF_CONTROL
       @trigger_callback(@control_name, 'click')
 
   update: (state) ->
+    if state.disabled != undefined
+      @state['disabled'] = state.disabled
+      @$el.prop('disabled', state.disabled)
     if state.text?
       @state['text'] = state.text
       @$el.text(state.text)
@@ -356,9 +365,124 @@ class WSF_INPUT_CONTROL extends WSF_CONTROL
     return @$el.val()
 
   update: (state) ->
+    if state.disabled != undefined
+      @state['disabled'] = state.disabled
+      @$el.prop('disabled', state.disabled)
     if state.text?
       @state['text'] = state.text
       @$el.val(state.text)
+
+class WSF_FILE_CONTROL extends WSF_CONTROL
+  constructor: ()->
+    super
+    @uploading = false
+
+  start_upload: ()->
+    if @$el[0].files.length==0
+      return
+    if @uploading
+      return 
+    @uploading = true
+    @$el.hide()
+    @progressbar = $ """<div class="progress progress-striped active upload"><div rstyle="width: 10%;" class="progress-bar"></div></div>"""
+    @$el.parent().append(@progressbar)
+
+    formData = new FormData();
+    action = @callback_url
+                      control_name: @get_full_control_name()
+                      event: "uploadfile"
+                      event_parameter: "" 
+    file = @$el[0].files[0];
+    formData.append('file', file)
+    formData.append('state', JSON.stringify(@get_context_state()))
+    @sendXHRequest(formData, action)
+
+  sendXHRequest: (formData, uri)->
+    #Get an XMLHttpRequest instance
+    xhr = new XMLHttpRequest();
+    self = @
+    onprogressHandler = (evt)->
+      percent = evt.loaded/evt.total*100
+      self.progressbar.find('.progress-bar').css {'width':percent+"%"}
+    onstatechange = (evt)->
+        if xhr.readyState==4 && xhr.status==200 
+          self.get_page().process_update(JSON.parse(xhr.responseText))
+
+    xhr.upload.addEventListener('progress', onprogressHandler, false); 
+
+    
+    xhr.addEventListener('readystatechange', onstatechange, false);
+    xhr.open('POST', uri, true);
+    xhr.send(formData);
+
+  attach_events: ()->
+    super
+    self = @
+    @$el.change ()->
+      self.change()
+
+  change: ()->
+    #update local state
+    @state['file_name'] = null
+    @state['file_type'] = null
+    @state['file_size'] = null 
+    @state['file_id'] = null 
+    if @$el[0].files.length>0
+      file = @$el[0].files[0]
+      @state['file_name'] = file.name
+      @state['file_type'] = file.type
+      @state['file_size'] = file.size
+    if @state['callback_change']
+      @trigger_callback(@control_name, 'change')
+    @trigger('change')
+
+  value:()->
+    return @$el.val()
+
+  update: (state) ->
+    if state.disabled != undefined
+      @state['disabled'] = state.disabled
+      @$el.prop('disabled', state.disabled)
+      @refresh()
+    if state.file_name != undefined
+      @state['file_name'] = state.file_name 
+    if state.file_type  != undefined
+      @state['file_type'] = state.file_type 
+    if state.file_size  != undefined
+      @state['file_size'] = state.file_size 
+    if state.file_id != undefined
+      if @state['file_id'] != state.file_id
+        @state['file_id'] = state.file_id
+        if @state['callback_uploaddone'] 
+          @trigger_callback(@control_name, 'uploaddone')
+        @uploading = false
+      @refresh()
+
+  refresh: ()->
+    if @uploading
+      return
+    @progressbar.remove()
+    @$el.parent().find("p").remove()
+    if @state['file_id'] != null
+      @$el.hide()
+      fname = $("""<p></p>""").addClass("form-control-static").text(@state['file_name'])
+      @$el.parent().append(fname)
+      if not @state['disabled']
+        fname.append(" ");
+        removebtn = $("<button />").text("Remove").addClass("btn btn-xs btn-danger")
+        self = @
+        removebtn.click ()->
+          self.progressbar.remove()
+          self.$el.parent().find("p").remove()
+          self.$el.show()
+          self.$el.val('')
+          self.change()
+        fname.append(removebtn)
+    else
+      @$el.show()
+      @$el.val('')
+      @change()
+
 
 class WSF_PASSWORD_CONTROL extends   WSF_INPUT_CONTROL   
 
@@ -599,6 +723,8 @@ class WSF_REPEATER_CONTROL extends WSF_CONTROL
 
 
 #### actions
+redirect = (action) ->
+    document.location.href = action.url
 
 show_alert = (action)->
     alert(action.message)

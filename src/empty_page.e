@@ -10,11 +10,22 @@ class
 inherit
 
 	BASE_PAGE
+		redefine
+			initialize_controls
+		end
 
 create
 	make
 
-feature
+feature -- Initialization
+
+	initialize_controls
+		do
+			Precursor
+			navbar.set_active (1)
+		end
+
+feature -- Implementation
 
 	process
 		do

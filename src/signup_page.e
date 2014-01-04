@@ -24,6 +24,7 @@ feature {NONE}
 			button1: WSF_BUTTON_CONTROL
 		do
 			Precursor
+			navbar.set_active (3)
 			main_control.add_column (3)
 			main_control.add_column (6)
 			main_control.add_column (3)
@@ -38,12 +39,12 @@ feature {NONE}
 			create email_container.make ("Email", create {WSF_INPUT_CONTROL}.make (""))
 			email_container.add_validator (create {WSF_EMAIL_VALIDATOR}.make ("Invalid email address"))
 			form.add_control (email_container)
-			create password_container.make ("Password", create {WSF_PASSWORD_CONTROL}.make (""))
-			password_container.add_validator (create {WSF_MIN_VALIDATOR [STRING]}.make (6, "Password must contain at least 6 characters"))
-			form.add_control (password_container)
-			create password2_container.make ("Repeat password", create {WSF_PASSWORD_CONTROL}.make (""))
-			password2_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent compare_password, "Passwords do not match"))
+			create password2_container.make ("Password", create {WSF_PASSWORD_CONTROL}.make (""))
+			password2_container.add_validator (create {WSF_MIN_VALIDATOR [STRING]}.make (6, "Password must contain at least 6 characters"))
 			form.add_control (password2_container)
+			create password3_container.make ("Repeat password", create {WSF_PASSWORD_CONTROL}.make (""))
+			password3_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent compare_password, "Passwords do not match"))
+			form.add_control (password3_container)
 			main_control.add_control (2, form)
 			create button1.make ("Register")
 			button1.set_click_event (agent handle_click)
@@ -58,7 +59,7 @@ feature {NONE}
 
 	compare_password (input: STRING): BOOLEAN
 		do
-			Result := password_container.value_control.value.same_string (input)
+			Result := password2_container.value_control.value.same_string (input)
 		end
 
 	check_username (input: STRING): BOOLEAN
@@ -86,8 +87,8 @@ feature
 
 	email_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
-	password_container: WSF_FORM_ELEMENT_CONTROL [STRING]
-
 	password2_container: WSF_FORM_ELEMENT_CONTROL [STRING]
+
+	password3_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
 end
