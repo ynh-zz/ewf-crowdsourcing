@@ -22,7 +22,9 @@ feature {NONE} -- Initialization
 	initialize_controls
 		local
 			name: WSF_INPUT_CONTROL
-			country: WSF_COUNTRY_CHOOSER_CONTROL
+			from_date: WSF_DATETIME_PICKER_CONTROL
+			to_date: WSF_DATETIME_PICKER_CONTROL
+			country: WSF_AUTOCOMPLETE_CONTROL
 			city: WSF_INPUT_CONTROL
 			category: WSF_INPUT_CONTROL
 			short_description: WSF_INPUT_CONTROL
@@ -39,7 +41,13 @@ feature {NONE} -- Initialization
 			create name.make ("")
 			create name_container.make ("Project name", name)
 			form.add_control (name_container)
-			create country.make ("div")
+			create from_date.make ("div")
+			create from_date_container.make ("From", from_date)
+			form.add_control (from_date_container)
+			create to_date.make ("div")
+			create to_date_container.make ("To", to_date)
+			form.add_control (to_date_container)
+			create country.make (create {FLAG_AUTOCOMPLETION}.make)
 			create country_container.make ("Country", country)
 			form.add_control (country_container)
 			create city.make ("")
@@ -71,6 +79,10 @@ feature -- Properties
 	form: WSF_FORM_CONTROL
 
 	name_container: WSF_FORM_ELEMENT_CONTROL [STRING]
+
+	from_date_container: WSF_FORM_ELEMENT_CONTROL [STRING]
+
+	to_date_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
 	country_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
