@@ -58,12 +58,14 @@ feature -- Access
 				create Result.make_empty
 			end
 		end
+
 	get_integer (a_field: READABLE_STRING_GENERAL): INTEGER_64
 		do
 			if attached {INTEGER_64} item (a_field) as int then
 				Result := int
 			end
 		end
+
 	get_real (a_field: READABLE_STRING_GENERAL): REAL_64
 		do
 			if attached {REAL_64} item (a_field) as real then

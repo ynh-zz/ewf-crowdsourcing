@@ -36,7 +36,7 @@ feature {NONE}
 			media_query: SQL_QUERY [SQL_ENTITY]
 		do
 			create project_query.make ("projects")
-			project_query.set_fields (<<["title"], ["description", "projects.description"], ["start"], ["end"], ["username"],["user_description", "users.description"], ["avatar", "email"], ["funding", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id)"], ["backers", "(SELECT COUNT( DISTINCT user_id ) FROM fundings WHERE project_id = projects.id)"], ["next_goal", "(SELECT amount FROM goals WHERE project_id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) limit 0,1)"]>>)
+			project_query.set_fields (<<["title"], ["description", "projects.description"], ["start"], ["end"], ["username"], ["user_description", "users.description"], ["avatar", "email"], ["funding", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id)"], ["backers", "(SELECT COUNT( DISTINCT user_id ) FROM fundings WHERE project_id = projects.id)"], ["next_goal", "(SELECT amount FROM goals WHERE project_id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) limit 0,1)"]>>)
 			project_query.set_where ("projects.id = " + project_id.out)
 			project_query.left_join ("users", "users.id = user_id")
 			project := project_query.first (database)

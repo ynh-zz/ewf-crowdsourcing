@@ -24,18 +24,19 @@ feature {NONE}
 			make_wsf_page (req, res)
 		end
 
-feature
-
 	initialize_controls
 		local
 			dropdown: WSF_DROPDOWN_CONTROL
 			button: WSF_BUTTON_CONTROL
+			username: WSF_INPUT_CONTROL
+			password: WSF_PASSWORD_CONTROL
 		do
 			create control.make
 			control.add_class ("container")
 			create navbar.make_with_brand ("EWF Crowd Sourcing")
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/%"", "Home"))
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/projects%"", "Project grid"))
+			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/create%"", "Create new project"))
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/signup%"", "Sign Up"))
 				-- create login form elements
 			create username.make ("")
@@ -111,11 +112,7 @@ feature -- Properties
 
 	navbar: WSF_NAVBAR_CONTROL
 
-	username: WSF_INPUT_CONTROL
-
 	username_container: WSF_FORM_ELEMENT_CONTROL [STRING]
-
-	password: WSF_PASSWORD_CONTROL
 
 	password_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 

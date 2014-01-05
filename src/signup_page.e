@@ -24,7 +24,7 @@ feature {NONE}
 			button1: WSF_BUTTON_CONTROL
 		do
 			Precursor
-			navbar.set_active (3)
+			navbar.set_active (4)
 			main_control.add_column (3)
 			main_control.add_column (6)
 			main_control.add_column (3)
@@ -75,11 +75,13 @@ feature {NONE}
 			Result := users_query.count_total (database) = 0
 		end
 
-feature
+feature -- Implementation
 
 	process
 		do
 		end
+
+feature -- Properties
 
 	form: WSF_FORM_CONTROL
 

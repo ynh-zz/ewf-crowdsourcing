@@ -26,7 +26,7 @@ feature {NONE}
 			table_alias := a_table_alias
 		end
 
-feature 
+feature
 
 	table_name: detachable STRING
 

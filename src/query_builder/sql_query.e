@@ -130,7 +130,6 @@ feature {NONE} -- Query to string convertion
 			end
 		end
 
-
 	query: STRING
 		do
 			Result := query_without_limit

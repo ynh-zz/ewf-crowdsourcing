@@ -102,7 +102,7 @@ feature
 
 	list: ARRAYED_LIST [SQL_CONDITION]
 
-feature  -- Query to string convertion
+feature -- Query to string convertion
 
 	expr: STRING
 		do
