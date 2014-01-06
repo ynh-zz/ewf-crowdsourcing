@@ -22,14 +22,15 @@ feature {NONE} -- Initialization
 	initialize_controls
 		local
 			name: WSF_INPUT_CONTROL
-			from_date: WSF_DATETIME_PICKER_CONTROL
-			to_date: WSF_DATETIME_PICKER_CONTROL
+			from_date: WSF_DATE_PICKER_CONTROL
+			to_date: WSF_DATE_PICKER_CONTROL
 			country: WSF_AUTOCOMPLETE_CONTROL
 			city: WSF_INPUT_CONTROL
 			category: WSF_INPUT_CONTROL
 			short_description: WSF_INPUT_CONTROL
 			description: WSF_TEXTAREA_CONTROL
 			thumbnail: WSF_INPUT_CONTROL
+			button:WSF_BUTTON_CONTROL
 		do
 			Precursor
 			navbar.set_active (3)
@@ -40,6 +41,7 @@ feature {NONE} -- Initialization
 			main_control.add_control (2, form)
 			create name.make ("")
 			create name_container.make ("Project name", name)
+			name_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_name, "Enter a valid projectname (between 3 and 50 characters)"))
 			form.add_control (name_container)
 			create from_date.make ("div")
 			create from_date_container.make ("From", from_date)
@@ -49,23 +51,78 @@ feature {NONE} -- Initialization
 			form.add_control (to_date_container)
 			create country.make (create {FLAG_AUTOCOMPLETION}.make)
 			create country_container.make ("Country", country)
+			country_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_country, "Enter a valid country!"))
 			form.add_control (country_container)
 			create city.make ("")
 			create city_container.make ("City", city)
+			city_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_city, "Enter a valid city!"))
 			form.add_control (city_container)
 			create category.make ("")
 			create category_container.make ("Category", category)
+			category_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_category, "Enter a valid category!"))
 			form.add_control (category_container)
 			create short_description.make ("")
 			create short_description_container.make ("Short description", short_description)
+			short_description_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_short_description, "Enter a valid short description!"))
 			form.add_control (short_description_container)
 			create description.make ("")
 			create description_container.make ("Description", description)
+			description_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_description, "Enter a valid description!"))
 			form.add_control (description_container)
 			create thumbnail.make ("")
 			thumbnail.set_type ("url")
+			thumbnail.append_attribute ("placeholder=%"optional%"")
 			create thumbnail_container.make ("Thumbnail URL", thumbnail)
+			thumbnail_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_thumbnail, "Enter a valid thumbnail!"))
 			form.add_control (thumbnail_container)
+			create button.make ("CREATE")
+			button.add_class ("btn-success")
+			button.set_click_event (agent handle_click)
+			form.add_control (button)
+		end
+
+feature -- Events
+
+	handle_click
+	do
+		form.validate
+	end
+
+feature -- Validations
+
+	check_name (input: STRING): BOOLEAN
+		do
+			Result := input.count >= 3 and input.count <= 50
+		end
+
+	check_country (input: STRING): BOOLEAN
+		do
+			Result := True
+		end
+
+	check_city (input: STRING): BOOLEAN
+		do
+			Result := not input.is_empty
+		end
+
+	check_category (input: STRING): BOOLEAN
+		do
+			Result := not input.is_empty
+		end
+
+	check_short_description (input: STRING): BOOLEAN
+		do
+			Result := not input.is_empty
+		end
+
+	check_description (input: STRING): BOOLEAN
+		do
+			Result := not input.is_empty
+		end
+
+	check_thumbnail (input: STRING): BOOLEAN
+		do
+			Result := True
 		end
 
 feature -- Implementation
