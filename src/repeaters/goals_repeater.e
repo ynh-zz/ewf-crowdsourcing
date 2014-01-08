@@ -1,4 +1,4 @@
- note
+note
 	description: "Summary description for {PROJECTS_REPEATER}."
 	author: ""
 	date: "$Date$"

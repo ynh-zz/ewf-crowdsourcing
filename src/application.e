@@ -82,6 +82,7 @@ feature -- Router and Filter
 			map_agent_uri ("/signup", agent execute_signup, Void)
 			map_agent_uri ("/projects", agent execute_projects, Void)
 			map_agent_uri ("/create", agent execute_create, Void)
+			map_agent_uri ("/support", agent execute_support, Void)
 			map_agent_uri_template ("/project/{project_id}", agent execute_project_details, Void)
 
 				-- NOTE: you could put all those files in a specific folder, and use WSF_FILE_SYSTEM_HANDLER with "/"
@@ -140,6 +141,14 @@ feature -- Execution
 	execute_project_details (request: WSF_REQUEST; response: WSF_RESPONSE)
 		local
 			page: DETAIL_PAGE
+		do
+			create page.make (database, request, response)
+			page.execute
+		end
+
+	execute_support (request: WSF_REQUEST; response: WSF_RESPONSE)
+		local
+			page: SUPPORT_PAGE
 		do
 			create page.make (database, request, response)
 			page.execute

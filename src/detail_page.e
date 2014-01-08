@@ -73,14 +73,14 @@ feature -- Initialization
 					slider.add_image (m.item.get_string ("url"), "")
 				end
 			end
-				--Build Info box
-			initialize_infobox
-			initialize_userbox
 				--Build Goals
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h3", "", "Goals"))
 			create goals_datasource.make_default (database, project_id)
 			create goals.make (goals_datasource)
 			main_control.add_control (2, goals)
+				--Build Info box
+			initialize_infobox
+			initialize_userbox
 				--Build Rewards
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h3", "", "Rewards"))
 			create rewards_datasource.make_default (database, project_id)
