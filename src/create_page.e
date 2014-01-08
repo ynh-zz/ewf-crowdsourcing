@@ -27,10 +27,11 @@ feature {NONE} -- Initialization
 			country: WSF_AUTOCOMPLETE_CONTROL
 			city: WSF_INPUT_CONTROL
 			category: WSF_INPUT_CONTROL
+			funding_goal:WSF_INPUT_CONTROL
 			short_description: WSF_INPUT_CONTROL
 			description: WSF_TEXTAREA_CONTROL
 			thumbnail: WSF_INPUT_CONTROL
-			button:WSF_BUTTON_CONTROL
+			button: WSF_BUTTON_CONTROL
 		do
 			Precursor
 			navbar.set_active (3)
@@ -41,7 +42,7 @@ feature {NONE} -- Initialization
 			main_control.add_control (2, form)
 			create name.make ("")
 			create name_container.make ("Project name", name)
-			name_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_name, "Enter a valid projectname (between 3 and 50 characters)"))
+			name_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_name, "Enter a valid projectname (between 3 and 50 characters)"))
 			form.add_control (name_container)
 			create from_date.make ("div")
 			create from_date_container.make ("From", from_date)
@@ -51,32 +52,36 @@ feature {NONE} -- Initialization
 			form.add_control (to_date_container)
 			create country.make (create {FLAG_AUTOCOMPLETION}.make)
 			create country_container.make ("Country", country)
-			country_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_country, "Enter a valid country!"))
+			country_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_country, "Enter a valid country!"))
 			form.add_control (country_container)
 			create city.make ("")
 			create city_container.make ("City", city)
-			city_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_city, "Enter a valid city!"))
+			city_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_city, "Enter a valid city!"))
 			form.add_control (city_container)
+			create funding_goal.make ("")
+			create funding_goal_container.make ("Funding goal", funding_goal)
+			funding_goal_container.add_validator (create {WSF_DECIMAL_VALIDATOR}.make ("Enter a valid funding goal"))
+			form.add_control (funding_goal_container)
 			create category.make ("")
 			create category_container.make ("Category", category)
-			category_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_category, "Enter a valid category!"))
+			category_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_category, "Enter a valid category!"))
 			form.add_control (category_container)
 			create short_description.make ("")
 			create short_description_container.make ("Short description", short_description)
-			short_description_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_short_description, "Enter a valid short description!"))
+			short_description_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_short_description, "Enter a valid short description!"))
 			form.add_control (short_description_container)
 			create description.make ("")
 			create description_container.make ("Description", description)
-			description_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_description, "Enter a valid description!"))
+			description_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_description, "Enter a valid description!"))
 			form.add_control (description_container)
 			create thumbnail.make ("")
 			thumbnail.set_type ("url")
 			thumbnail.append_attribute ("placeholder=%"optional%"")
 			create thumbnail_container.make ("Thumbnail URL", thumbnail)
-			thumbnail_container.add_validator (create {WSF_AGENT_VALIDATOR[STRING]}.make (agent check_thumbnail, "Enter a valid thumbnail!"))
+			thumbnail_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_thumbnail, "Enter a valid thumbnail!"))
 			form.add_control (thumbnail_container)
-			create button.make ("CREATE")
-			button.add_class ("btn-success")
+			create button.make ("CREATE PROJECT")
+			button.add_class ("btn-success btn-block")
 			button.set_click_event (agent handle_click)
 			form.add_control (button)
 		end
@@ -84,9 +89,21 @@ feature {NONE} -- Initialization
 feature -- Events
 
 	handle_click
-	do
-		form.validate
-	end
+		local
+			entity: SQL_ENTITY
+			category_id: INTEGER
+		do
+			form.validate
+			if form.is_valid then
+				create entity.make
+				entity ["title"] := name_container.value_control.value
+				entity ["category_id"] := category_id
+				entity ["description"] := description_container.value_control.value
+				entity ["start"] := from_date_container.value_control.value
+				entity ["end"] := to_date_container.value_control.value
+				entity.save (database, "projects")
+			end
+		end
 
 feature -- Validations
 
@@ -146,6 +163,8 @@ feature -- Properties
 	city_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
 	category_container: WSF_FORM_ELEMENT_CONTROL [STRING]
+
+	funding_goal_container:WSF_FORM_ELEMENT_CONTROL[STRING]
 
 	short_description_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 

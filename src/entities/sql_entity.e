@@ -12,9 +12,14 @@ inherit
 	WSF_ENTITY
 
 create
-	make_from_sqlite_result_row
+	make, make_from_sqlite_result_row
 
-feature {NONE}
+feature {NONE} -- Initialization
+
+	make
+		do
+			create data.make (2)
+		end
 
 	make_from_sqlite_result_row (row: SQLITE_RESULT_ROW; a_fields: ARRAY [TUPLE])
 		local
@@ -42,7 +47,14 @@ feature {NONE} -- DATA
 
 feature -- Access
 
-	item alias "[]" (a_field: READABLE_STRING_GENERAL): detachable ANY
+	put (value: detachable ANY; a_field: READABLE_STRING_GENERAL)
+		do
+			if attached value as v then
+				data [a_field] := v
+			end
+		end
+
+	item alias "[]" (a_field: READABLE_STRING_GENERAL): detachable ANY assign put
 			-- <Precursor>
 		do
 			if data.has (a_field) then
@@ -71,6 +83,33 @@ feature -- Access
 			if attached {REAL_64} item (a_field) as real then
 				Result := real
 			end
+		end
+
+feature -- Store
+
+	save (database: SQLITE_DATABASE; table: STRING)
+		local
+			list: LINKED_LIST [STRING]
+			statement: SQLITE_INSERT_STATEMENT
+			insert: STRING
+			values: STRING
+		do
+			create insert.make_from_string ("INSERT INTO " + table + " (")
+			create values.make_from_string (") VALUES (")
+			across
+				data as c
+			loop
+				if attached c.item as elem then
+					insert.append (c.key.as_string_32)
+					values.append ("'" + elem.out + "'")
+					if not c.is_last then
+						insert.append (", ")
+						values.append (", ")
+					end
+				end
+			end
+			create statement.make (insert + values + ");", database)
+			statement.execute
 		end
 
 end
