@@ -72,6 +72,8 @@ feature -- Event
 	handle_login_click
 		do
 			login_form.validate
+			if login_form.is_valid then
+			end
 		end
 
 feature -- Validations

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			country: WSF_AUTOCOMPLETE_CONTROL
 			city: WSF_INPUT_CONTROL
 			category: WSF_INPUT_CONTROL
-			funding_goal:WSF_INPUT_CONTROL
+			funding_goal: WSF_INPUT_CONTROL
 			short_description: WSF_INPUT_CONTROL
 			description: WSF_TEXTAREA_CONTROL
 			thumbnail: WSF_INPUT_CONTROL
@@ -92,15 +92,22 @@ feature -- Events
 		local
 			entity: SQL_ENTITY
 			category_id: INTEGER
+			user_id:INTEGER
+			city_id:INTEGER
+			timestamp: DATE_TIME
 		do
 			form.validate
 			if form.is_valid then
 				create entity.make
+				create timestamp.make_now
 				entity ["title"] := name_container.value_control.value
 				entity ["category_id"] := category_id
+				entity ["user_id"] := user_id
+				entity ["city_id"] := city_id
 				entity ["description"] := description_container.value_control.value
 				entity ["start"] := from_date_container.value_control.value
 				entity ["end"] := to_date_container.value_control.value
+				entity ["updatetime"] := timestamp.formatted_out ("[0]dd-[0]mm-yyyy")
 				entity.save (database, "projects")
 			end
 		end
@@ -164,7 +171,7 @@ feature -- Properties
 
 	category_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
-	funding_goal_container:WSF_FORM_ELEMENT_CONTROL[STRING]
+	funding_goal_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
 	short_description_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 

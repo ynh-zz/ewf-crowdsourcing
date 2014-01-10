@@ -94,21 +94,36 @@ feature -- Store
 			insert: STRING
 			values: STRING
 		do
-			create insert.make_from_string ("INSERT INTO " + table + " (")
-			create values.make_from_string (") VALUES (")
-			across
-				data as c
-			loop
-				if attached c.item as elem then
-					insert.append (c.key.as_string_32)
-					values.append ("'" + elem.out + "'")
-					if not c.is_last then
-						insert.append (", ")
-						values.append (", ")
+			if attached data ["id"] as id then
+				create values.make_empty
+				across
+					data as c
+				loop
+					if attached c.item as elem and then not elem.is_equal ("id") then
+						values.append (c.key.out + "=" + elem.out)
+						if not c.is_last then
+							values.append (",")
+						end
 					end
 				end
+				create statement.make ("UPDATE " + table + " SET " + values + " WHERE id=" + id.out + ";", database)
+			else
+				create insert.make_from_string ("INSERT INTO " + table + " (")
+				create values.make_from_string (") VALUES (")
+				across
+					data as c
+				loop
+					if attached c.item as elem then
+						insert.append (c.key.out)
+						values.append ("'" + elem.out + "'")
+						if not c.is_last then
+							insert.append (", ")
+							values.append (", ")
+						end
+					end
+				end
+				create statement.make (insert + values + ");", database)
 			end
-			create statement.make (insert + values + ");", database)
 			statement.execute
 		end
 
