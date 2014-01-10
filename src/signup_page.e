@@ -60,7 +60,7 @@ feature {NONE}
 			form.validate
 			if form.is_valid then
 				create user.make
-				user ["username"] := username_container.value
+				user ["username"] := name_container.value
 				user ["password"] := password2_container.value
 				user ["email"] := email_container.value
 				user ["city_id"] := city_id
