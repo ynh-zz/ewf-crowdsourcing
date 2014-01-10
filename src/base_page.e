@@ -70,13 +70,25 @@ feature {NONE}
 feature -- Event
 
 	handle_login_click
+		local
+			query: SQL_QUERY [SQL_ENTITY]
+			user: SQL_ENTITY
+			condition: SQL_CONDITIONS
 		do
 			login_form.validate
 			if login_form.is_valid then
+				create query.make ("users")
+				query.set_fields (<<["id"], ["username"]>>)
+				create condition.make_condition ("AND")
+				condition ["username"].equals (username_container.value)
+				user := query.run (database).first
+				query.set_where (condition)
+				login (user)
+				redirect ("/")
 			end
 		end
 
-feature -- Validations
+feature {NONE} -- Validations
 
 	validate_username (n: STRING): BOOLEAN
 		local
@@ -86,7 +98,7 @@ feature -- Validations
 			create users_query.make ("users")
 			users_query.set_fields (<<["username"]>>)
 			create condition.make_condition ("AND")
-			condition ["username"].sql_like (n)
+			condition ["username"].equals (n)
 			users_query.set_where (condition)
 			Result := users_query.count_total (database) = 1
 		end
@@ -97,11 +109,46 @@ feature -- Validations
 			condition: SQL_CONDITIONS
 		do
 			create users_query.make ("users")
-			users_query.set_fields (<<["password"]>>)
+			users_query.set_fields (<<["username", "password"]>>)
 			create condition.make_condition ("AND")
-			condition ["password"].sql_like (p)
+			condition ["password"].equals (p)
+			condition ["username"].equals (username_container.value)
 			users_query.set_where (condition)
 			Result := users_query.count_total (database) = 1
+		end
+
+feature -- User session
+
+	login (user: SQL_ENTITY)
+		require
+			attached user ["id"]
+		local
+			h: HTTP_HEADER
+			date: DATE_TIME
+		do
+			if attached user ["id"] as id then
+				create h.make
+				create date.make_now
+				date.add (create {DATE_TIME_DURATION}.make (0, 1, 0, 0, 0, 0))
+				h.put_cookie ("user", id.out, Void, "/", Void, False, False)
+				response.put_header_lines (h)
+			end
+		end
+
+	logout
+		local
+			h: HTTP_HEADER
+			date: DATE_TIME
+		do
+			create date.make (0, 0, 0, 0, 0, 0)
+			create h.make
+			h.put_cookie_with_expiration_date ("user", "", date, "/", Void, False, False)
+			response.add_header_line (h.string)
+		end
+
+	is_logged_in: BOOLEAN
+		do
+			Result := attached request.cookie ("user")
 		end
 
 feature -- Properties

@@ -107,6 +107,7 @@ feature -- Store
 					end
 				end
 				create statement.make ("UPDATE " + table + " SET " + values + " WHERE id=" + id.out + ";", database)
+				statement.execute
 			else
 				create insert.make_from_string ("INSERT INTO " + table + " (")
 				create values.make_from_string (") VALUES (")
@@ -123,8 +124,9 @@ feature -- Store
 					end
 				end
 				create statement.make (insert + values + ");", database)
+				statement.execute
+				data ["id"] := statement.last_row_id
 			end
-			statement.execute
 		end
 
 end

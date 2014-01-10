@@ -53,13 +53,24 @@ feature {NONE}
 		end
 
 	handle_click
+		local
+			user: SQL_ENTITY
+			city_id: INTEGER
 		do
 			form.validate
+			if form.is_valid then
+				create user.make
+				user ["username"] := username_container.value
+				user ["password"] := password2_container.value
+				user ["email"] := email_container.value
+				user ["city_id"] := city_id
+				user.save (database, "users")
+			end
 		end
 
 	compare_password (input: STRING): BOOLEAN
 		do
-			Result := password2_container.value_control.value.same_string (input)
+			Result := password2_container.value.same_string (input)
 		end
 
 	check_username (input: STRING): BOOLEAN
