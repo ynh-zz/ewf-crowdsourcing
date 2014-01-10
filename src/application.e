@@ -83,6 +83,7 @@ feature -- Router and Filter
 			map_agent_uri ("/projects", agent execute_projects, Void)
 			map_agent_uri ("/create", agent execute_create, Void)
 			map_agent_uri ("/support", agent execute_support, Void)
+			map_agent_uri ("/logout", agent logout, Void)
 			map_agent_uri_template ("/project/{project_id}", agent execute_project_details, Void)
 
 				-- NOTE: you could put all those files in a specific folder, and use WSF_FILE_SYSTEM_HANDLER with "/"
@@ -152,6 +153,18 @@ feature -- Execution
 		do
 			create page.make (database, request, response)
 			page.execute
+		end
+
+	logout (request: WSF_REQUEST; response: WSF_RESPONSE)
+		local
+			h: HTTP_HEADER
+			date: DATE_TIME
+		do
+			create date.make_from_epoch (0)
+			create h.make
+			h.put_cookie_with_expiration_date ("user", "-1", date, "/", Void, False, False)
+			response.add_header_lines (h)
+			response.redirect_now ("/")
 		end
 
 feature --DB

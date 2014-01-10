@@ -103,7 +103,7 @@ feature -- Initialization
 				body.append (render_tag_with_tagname ("h5", "pledged of  $" + a_project.get_integer ("next_goal").out + " goal", "", ""))
 				create end_date.make_from_string (a_project.get_string ("end"), "yyyy-[0]mm-[0]dd hh:[0]mi:[0]ss")
 				duration := end_date.relative_duration (create {DATE_TIME}.make_now_utc)
-				days := (duration.fine_seconds_count / 60 / 60 / 24).floor
+				days := (duration.fine_seconds_count / 60 / 60 / 24).floor.max (0)
 				body.append (render_tag_with_tagname ("h1", "" + days.out, "", ""))
 				body.append (render_tag_with_tagname ("h5", "days to go", "", ""))
 				main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("div", "class=%"well%"", body))

@@ -46,7 +46,16 @@ feature {NONE}
 		end
 
 	initialize_user_profile
+		local
+			dropdown: WSF_DROPDOWN_CONTROL
 		do
+			if attached current_user as a_current_user then
+				create dropdown.make_with_tag_name (a_current_user.get_string ("username"), "li")
+				dropdown.add_link_item ("My Profile", "/me")
+				dropdown.add_divider
+				dropdown.add_link_item ("Logout", "/logout")
+				navbar.add_element_right (dropdown)
+			end
 		end
 
 	initialize_login_form
@@ -115,7 +124,7 @@ feature {NONE} -- Validations
 			condition: SQL_CONDITIONS
 		do
 			create users_query.make ("users")
-			users_query.set_fields (<<["*"]>>)
+			users_query.set_fields (<<["username"]>>)
 			create condition.make_condition ("AND")
 			condition ["username"].equals (n)
 			users_query.set_where (condition)
@@ -129,7 +138,7 @@ feature {NONE} -- Validations
 		do
 			if attached username_container as a_username_container then
 				create users_query.make ("users")
-				users_query.set_fields (<<["*"]>>)
+				users_query.set_fields (<<["username"]>>)
 				create condition.make_condition ("AND")
 				condition ["password"].equals (p)
 				condition ["username"].equals (a_username_container.value)
@@ -154,7 +163,7 @@ feature -- User session
 			if not user_loaded then
 				if attached request.cookie ("user") as id then
 					create users_query.make ("users")
-					users_query.set_fields (<<["*"]>>)
+					users_query.set_fields (<<["username"], ["description"], ["avatar", "email"]>>)
 					create condition.make_condition ("AND")
 					condition ["id"].equals (id.string_representation)
 					users_query.set_where (condition)
@@ -179,17 +188,6 @@ feature -- User session
 				h.put_cookie ("user", id.out, Void, "/", Void, False, False)
 				response.put_header_lines (h)
 			end
-		end
-
-	logout
-		local
-			h: HTTP_HEADER
-			date: DATE_TIME
-		do
-			create date.make (0, 0, 0, 0, 0, 0)
-			create h.make
-			h.put_cookie_with_expiration_date ("user", "", date, "/", Void, False, False)
-			response.add_header_line (h.string)
 		end
 
 	is_logged_in: BOOLEAN
