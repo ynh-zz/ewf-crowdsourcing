@@ -48,9 +48,12 @@ feature {NONE}
 	initialize_user_profile
 		local
 			dropdown: WSF_DROPDOWN_CONTROL
+			username: STRING
 		do
 			if attached current_user as a_current_user then
-				create dropdown.make_with_tag_name (a_current_user.get_string ("username"), "li")
+				username := render_tag_with_tagname ("img", "", "style=%"max-width: 20px;margin-right: 10px;%" src=%"http://www.gravatar.com/avatar/" + a_current_user.get_string ("avatar") + "?d=identicon&f=y%"", "")
+				username.append (a_current_user.get_string ("username"))
+				create dropdown.make_with_tag_name (username, "li")
 				dropdown.add_link_item ("My Profile", "/me")
 				dropdown.add_divider
 				dropdown.add_link_item ("Logout", "/logout")
