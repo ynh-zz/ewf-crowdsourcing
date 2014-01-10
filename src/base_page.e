@@ -111,7 +111,6 @@ feature -- Event
 					condition ["username"].equals (a_username_container.value)
 					query.set_where (condition)
 					login (query.first (database))
-					redirect ("/")
 				end
 			end
 		end
@@ -187,6 +186,7 @@ feature -- User session
 				date.add (create {DATE_TIME_DURATION}.make (0, 1, 0, 0, 0, 0))
 				h.put_cookie ("user", id.out, Void, "/", Void, False, False)
 				response.put_header_lines (h)
+				redirect ("/")
 			end
 		end
 

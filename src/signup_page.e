@@ -65,6 +65,7 @@ feature {NONE}
 				user ["email"] := email_container.value
 				user ["city_id"] := city_id
 				user.save (database, "users")
+				login (user)
 			end
 		end
 
