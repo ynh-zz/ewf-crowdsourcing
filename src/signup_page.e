@@ -82,7 +82,7 @@ feature {NONE}
 			create users_query.make ("users")
 			users_query.set_fields (<<["username"]>>)
 			create condition.make_condition ("AND")
-			condition ["username"].sql_like (input)
+			condition ["username"].equals (input)
 			users_query.set_where (condition)
 			Result := users_query.count_total (database) = 0
 		end

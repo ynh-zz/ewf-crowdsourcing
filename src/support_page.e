@@ -30,9 +30,13 @@ feature {NONE}
 			main_control.add_column (6)
 			main_control.add_column (3)
 			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h1", "", "Support project"))
+			load_reward
 			create form.make
 			create amount.make ("")
 			create amount_container.make ("Amount", amount)
+			if attached reward ["amount"] as a then
+				amount_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent validate_amount, "Minimal amount is " + a.out))
+			end
 			form.add_control (amount_container)
 			main_control.add_control (2, form)
 		end
@@ -41,11 +45,33 @@ feature {NONE}
 		do
 			form.validate
 			if form.is_valid then
-
 			end
 		end
 
+feature -- Validation
+
+	validate_amount (amount: STRING): BOOLEAN
+		do
+		end
+
 feature -- Implementation
+
+	load_reward
+		local
+			query: SQL_QUERY [SQL_ENTITY]
+			condition: SQL_CONDITIONS
+		do
+			if attached request.path_parameter ("reward_id") as id then
+				create query.make ("rewards")
+				query.set_fields (<<["id"], ["amount"]>>)
+				create condition.make_condition ("AND")
+				condition ["id"].equals (id)
+				query.set_where (condition)
+				reward := query.run (database).first
+			else
+				create reward.make
+			end
+		end
 
 	process
 		do
@@ -53,7 +79,9 @@ feature -- Implementation
 
 feature -- Properties
 
-	amount_container: WSF_FORM_ELEMENT_CONTROL[STRING]
+	reward: SQL_ENTITY
+
+	amount_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
 	form: WSF_FORM_CONTROL
 
