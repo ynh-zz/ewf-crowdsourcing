@@ -32,7 +32,7 @@ feature
 		do
 
 			create a_query.make ("rewards")
-			a_query.set_fields (<<["amount"],["description"],["availability"],["taken","(SELECT count(*) FROM fundings WHERE reward_id = rewards.id)"]>>)
+			a_query.set_fields (<<["id"], ["amount"],["description"],["availability"],["taken","(SELECT count(*) FROM fundings WHERE reward_id = rewards.id)"]>>)
  			create cond.make_condition ("AND")
 			a_query.set_where (cond)
 			cond ["project_id"].equals (project_id)

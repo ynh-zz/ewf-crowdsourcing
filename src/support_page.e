@@ -52,6 +52,12 @@ feature -- Validation
 
 	validate_amount (amount: STRING): BOOLEAN
 		do
+			if amount.is_integer then
+				if attached reward ["amount"] as a_amount and then attached {INTEGER} a_amount as a and then amount.to_integer >= a then
+					Result := True
+				else
+				end
+			end
 		end
 
 feature -- Implementation
@@ -65,7 +71,7 @@ feature -- Implementation
 				create query.make ("rewards")
 				query.set_fields (<<["id"], ["amount"]>>)
 				create condition.make_condition ("AND")
-				condition ["id"].equals (id)
+				condition ["id"].equals (id.string_representation)
 				query.set_where (condition)
 				reward := query.run (database).first
 			else
