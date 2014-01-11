@@ -165,7 +165,7 @@ feature -- User session
 			if not user_loaded then
 				if attached request.cookie ("user") as id then
 					create users_query.make ("users")
-					users_query.set_fields (<<["username"], ["description"], ["avatar", "email"]>>)
+					users_query.set_fields (<<["id"], ["username"], ["description"], ["avatar", "email"], ["email"]>>)
 					create condition.make_condition ("AND")
 					condition ["id"].equals (id.string_representation)
 					users_query.set_where (condition)

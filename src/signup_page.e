@@ -20,15 +20,14 @@ create
 feature {NONE}
 
 	initialize_controls
-		local
-			button1: WSF_BUTTON_CONTROL
 		do
 			Precursor
 			navbar.set_active (4)
 			main_control.add_column (3)
 			main_control.add_column (6)
 			main_control.add_column (3)
-			main_control.add_control (2, create {WSF_BASIC_CONTROL}.make_with_body ("h1", "", "Signup"))
+			create title.make_with_body ("h1", "", "Signup")
+			main_control.add_control (2, title)
 			create form.make_with_label_width (4)
 			form.add_class ("form-horizontal")
 			create name_container.make ("Username", create {WSF_INPUT_CONTROL}.make (""))
@@ -46,10 +45,10 @@ feature {NONE}
 			password3_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent compare_password, "Passwords do not match"))
 			form.add_control (password3_container)
 			main_control.add_control (2, form)
-			create button1.make ("Register")
-			button1.set_click_event (agent handle_click)
-			button1.add_class (" btn-lg btn-primary btn-block")
-			form.add_control (button1)
+			create submit_button.make ("Register")
+			submit_button.set_click_event (agent handle_click)
+			submit_button.add_class (" btn-lg btn-primary btn-block")
+			form.add_control (submit_button)
 		end
 
 	handle_click
@@ -104,5 +103,9 @@ feature -- Properties
 	password2_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
 	password3_container: WSF_FORM_ELEMENT_CONTROL [STRING]
+
+	title: WSF_BASIC_CONTROL
+
+	submit_button: WSF_BUTTON_CONTROL
 
 end

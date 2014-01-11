@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			main_control.add_column (2)
 			create form.make_with_label_width (3)
 			main_control.add_control (2, form)
+			form.add_control (create {WSF_BASIC_CONTROL}.make_with_body ("h1", "", "Create Project"))
 			create name.make ("")
 			create name_container.make ("Project name", name)
 			name_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_name, "Enter a valid projectname (between 3 and 50 characters)"))
@@ -92,8 +93,8 @@ feature -- Events
 		local
 			entity: SQL_ENTITY
 			category_id: INTEGER
-			user_id:INTEGER
-			city_id:INTEGER
+			user_id: INTEGER
+			city_id: INTEGER
 			timestamp: DATE_TIME
 		do
 			form.validate

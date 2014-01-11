@@ -83,6 +83,7 @@ feature -- Router and Filter
 			map_agent_uri ("/projects", agent execute_projects, Void)
 			map_agent_uri ("/create", agent execute_create, Void)
 			map_agent_uri_template ("/support/{reward_id}", agent execute_support, Void)
+			map_agent_uri ("/me", agent execute_edit_profile, Void)
 			map_agent_uri ("/logout", agent logout, Void)
 			map_agent_uri_template ("/project/{project_id}", agent execute_project_details, Void)
 
@@ -150,6 +151,14 @@ feature -- Execution
 	execute_support (request: WSF_REQUEST; response: WSF_RESPONSE)
 		local
 			page: SUPPORT_PAGE
+		do
+			create page.make (database, request, response)
+			page.execute
+		end
+
+	execute_edit_profile (request: WSF_REQUEST; response: WSF_RESPONSE)
+		local
+			page: EDIT_PROFILE_PAGE
 		do
 			create page.make (database, request, response)
 			page.execute
