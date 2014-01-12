@@ -89,25 +89,28 @@ feature -- Store
 
 	save (database: SQLITE_DATABASE; table: STRING)
 		local
-			list: LINKED_LIST [STRING]
+			list: LINKED_LIST [detachable ANY]
 			statement: SQLITE_INSERT_STATEMENT
 			insert: STRING
 			values: STRING
 		do
+			create list.make
 			if attached data ["id"] as id then
 				create values.make_empty
 				across
 					data as c
 				loop
-					if attached c.item as elem and then not elem.is_equal ("id") then
-						values.append (c.key.out + "=" + elem.out)
+					if not c.key.is_equal ("id") then
+						values.append (c.key.out + "= ?")
+						list.extend (c.item)
 						if not c.is_last then
 							values.append (",")
 						end
 					end
 				end
-				create statement.make ("UPDATE " + table + " SET " + values + " WHERE id=" + id.out + ";", database)
-				statement.execute
+				list.extend (id.out)
+				create statement.make ("UPDATE " + table + " SET " + values + " WHERE id = ?;", database)
+				statement.execute_with_arguments (list)
 			else
 				create insert.make_from_string ("INSERT INTO " + table + " (")
 				create values.make_from_string (") VALUES (")
@@ -116,7 +119,8 @@ feature -- Store
 				loop
 					if attached c.item as elem then
 						insert.append (c.key.out)
-						values.append ("'" + elem.out + "'")
+						values.append (" ? ")
+						list.extend (c.item)
 						if not c.is_last then
 							insert.append (", ")
 							values.append (", ")
@@ -124,7 +128,7 @@ feature -- Store
 					end
 				end
 				create statement.make (insert + values + ");", database)
-				statement.execute
+				statement.execute_with_arguments (list)
 				data ["id"] := statement.last_row_id
 			end
 		end
