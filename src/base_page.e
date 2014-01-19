@@ -31,8 +31,8 @@ feature {NONE}
 			create navbar.make_with_brand ("EWF Crowd Sourcing")
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/%"", "Home"))
 			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/projects%"", "Project grid"))
-			navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/create%"", "Create new project"))
 			if is_logged_in then
+				navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/create%"", "Create new project"))
 				initialize_user_profile
 			else
 				navbar.add_list_element (create {WSF_BASIC_CONTROL}.make_with_body ("a", "href=%"/signup%"", "Sign Up"))
