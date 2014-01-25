@@ -20,6 +20,8 @@ create
 feature {NONE}
 
 	initialize_controls
+		local
+			avatar_file: WSF_FILE
 		do
 			Precursor
 			navbar.set_active (4)
@@ -38,9 +40,14 @@ feature {NONE}
 			create email_container.make ("Email", create {WSF_INPUT_CONTROL}.make (""))
 			email_container.add_validator (create {WSF_EMAIL_VALIDATOR}.make ("Invalid email address"))
 			form.add_control (email_container)
+			create avatar_control.make
+			avatar_control.set_upload_function (agent upload_file)
+			avatar_control.set_upload_done_event (agent submit_form)
+			create avatar_container.make ("Avatar", avatar_control)
+			form.add_control (avatar_container)
 			main_control.add_control (2, form)
 			create submit_button.make ("Update Profile")
-			submit_button.set_click_event (agent handle_click)
+			submit_button.set_click_event (agent submit_form)
 			submit_button.add_class (" btn-lg btn-primary btn-block")
 			form.add_control (submit_button)
 			if attached current_user as user then
@@ -50,20 +57,51 @@ feature {NONE}
 				if attached user ["email"] as email then
 					email_container.set_value (email.out)
 				end
+				if attached user ["avatar"] as avatar then
+					create avatar_file.make ("Your current avatar", "",0, user.get_string ("avatar"))
+					avatar_control.set_value (avatar_file)
+				end
 			end
 		end
 
-	handle_click
+	submit_form
 		local
 			city_id: INTEGER
 		do
 			form.validate
 			if form.is_valid and attached current_user as user then
-				user ["username"] := name_container.value
-				user ["email"] := email_container.value
-				user ["city_id"] := city_id
-				user.save (database, "users")
-				login (user)
+				if attached avatar_control.file as f and then not f.is_uploaded then
+					avatar_control.set_disabled (true)
+					avatar_control.start_upload
+					submit_button.set_disabled (true)
+					submit_button.set_text ("Uploading ...")
+				else
+					user ["username"] := name_container.value
+					user ["email"] := email_container.value
+					user ["city_id"] := city_id
+					if attached avatar_control.value as file then
+						user ["avatar"] := file.id
+					end
+					user.save (database, "users")
+					login (user)
+				end
+			end
+		end
+
+	upload_file (f: ITERABLE [WSF_UPLOADED_FILE]): detachable String
+		local
+			file_location: STRING
+		do
+				-- Store file on server and return link
+			across
+				f as i
+			loop
+				if attached current_user as user and then attached user["id"] as id then
+					file_location := "/avatar/" + id.out + "_" + i.item.filename
+					if i.item.move_to ("." + file_location) then
+						Result := file_location
+					end
+				end
 			end
 		end
 
@@ -96,6 +134,10 @@ feature -- Properties
 	name_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
 	email_container: WSF_FORM_ELEMENT_CONTROL [STRING]
+
+	avatar_container: WSF_FORM_ELEMENT_CONTROL [detachable WSF_FILE]
+
+	avatar_control: WSF_FILE_CONTROL
 
 	title: WSF_BASIC_CONTROL
 

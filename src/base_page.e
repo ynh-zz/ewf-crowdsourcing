@@ -51,7 +51,7 @@ feature {NONE}
 			username: STRING
 		do
 			if attached current_user as a_current_user then
-				username := render_tag_with_tagname ("img", "", "style=%"max-width: 20px;margin-right: 10px;%" src=%"http://www.gravatar.com/avatar/" + a_current_user.get_string ("avatar") + "?d=identicon&f=y%"", "")
+				username := render_tag_with_tagname ("img", "", "style=%"max-width: 20px;margin-right: 10px;%" src=%"" + a_current_user.get_string ("avatar") + "%"", "")
 				username.append (a_current_user.get_string ("username"))
 				create dropdown.make_with_tag_name (username, "li")
 				dropdown.add_link_item ("My Profile", "/me")
@@ -165,7 +165,7 @@ feature -- User session
 			if not user_loaded then
 				if attached request.cookie ("user") as id then
 					create users_query.make ("users")
-					users_query.set_fields (<<["id"], ["username"], ["description"], ["avatar", "email"], ["email"]>>)
+					users_query.set_fields (<<["id"], ["username"], ["description"], ["avatar", "avatar"], ["email"]>>)
 					create condition.make_condition ("AND")
 					condition ["id"].equals (id.string_representation)
 					users_query.set_where (condition)

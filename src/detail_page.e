@@ -36,7 +36,7 @@ feature {NONE}
 			media_query: SQL_QUERY [SQL_ENTITY]
 		do
 			create project_query.make ("projects")
-			project_query.set_fields (<<["title"], ["description", "projects.description"], ["start"], ["end"], ["username"], ["user_description", "users.description"], ["avatar", "email"], ["funding", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id)"], ["backers", "(SELECT COUNT( DISTINCT user_id ) FROM fundings WHERE project_id = projects.id)"], ["next_goal", "(SELECT amount FROM goals WHERE project_id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) limit 0,1)"]>>)
+			project_query.set_fields (<<["title"], ["description", "projects.description"], ["start"], ["end"], ["username"], ["user_description", "users.description"], ["avatar", "avatar"], ["funding", "(SELECT sum(amount) FROM fundings WHERE project_id = projects.id)"], ["backers", "(SELECT COUNT( DISTINCT user_id ) FROM fundings WHERE project_id = projects.id)"], ["next_goal", "(SELECT amount FROM goals WHERE project_id = goals.project_id and amount>(SELECT sum(amount) FROM fundings WHERE project_id = projects.id) limit 0,1)"]>>)
 			project_query.set_where ("projects.id = " + project_id.out)
 			project_query.left_join ("users", "users.id = user_id")
 			project := project_query.first (database)
@@ -117,7 +117,7 @@ feature -- Initialization
 		do
 			if attached project as a_project then
 				create box.make_empty
-				box.append (render_tag_with_tagname ("a", render_tag_with_tagname ("img", "", "style=%"max-width: 200px;%" src=%"http://www.gravatar.com/avatar/" + a_project.get_string ("avatar") + "?d=identicon&f=y%"", "media-object"), "href=%"#%"", "pull-left thumbnail"))
+				box.append (render_tag_with_tagname ("a", render_tag_with_tagname ("img", "", "style=%"max-width: 200px;%" src=%"" + a_project.get_string ("avatar") + "%"", "media-object"), "href=%"#%"", "pull-left thumbnail"))
 				create body.make_empty
 				body.append (render_tag_with_tagname ("h3", a_project.get_string ("username"), "", "media-heading"))
 				body.append (a_project.get_string ("user_description"))

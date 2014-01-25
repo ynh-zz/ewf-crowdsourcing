@@ -90,6 +90,7 @@ feature -- Router and Filter
 				-- NOTE: you could put all those files in a specific folder, and use WSF_FILE_SYSTEM_HANDLER with "/"
 				-- this way, it handles the caching and so on
 			router.handle_with_request_methods ("/assets", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden ("assets"), router.methods_GET)
+			router.handle_with_request_methods ("/avatar", create {WSF_FILE_SYSTEM_HANDLER}.make_hidden ("avatar"), router.methods_GET)
 		end
 
 feature -- Helper: mapping
