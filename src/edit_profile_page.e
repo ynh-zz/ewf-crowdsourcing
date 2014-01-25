@@ -40,7 +40,7 @@ feature {NONE}
 			create email_container.make ("Email", create {WSF_INPUT_CONTROL}.make (""))
 			email_container.add_validator (create {WSF_EMAIL_VALIDATOR}.make ("Invalid email address"))
 			form.add_control (email_container)
-			create avatar_control.make
+			create avatar_control.make_with_image_preview
 			avatar_control.set_upload_function (agent upload_file)
 			avatar_control.set_upload_done_event (agent submit_form)
 			create avatar_container.make ("Avatar", avatar_control)
