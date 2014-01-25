@@ -57,8 +57,8 @@ feature {NONE}
 				if attached user ["email"] as email then
 					email_container.set_value (email.out)
 				end
-				if attached user ["avatar"] as avatar then
-					create avatar_file.make ("Your current avatar", "",0, user.get_string ("avatar"))
+				if not user.get_string ("avatar").is_empty then
+					create avatar_file.make ("Your current avatar", "", 0, user.get_string ("avatar"))
 					avatar_control.set_value (avatar_file)
 				end
 			end
@@ -96,7 +96,7 @@ feature {NONE}
 			across
 				f as i
 			loop
-				if attached current_user as user and then attached user["id"] as id then
+				if attached current_user as user and then attached user ["id"] as id then
 					file_location := "/avatar/" + id.out + "_" + i.item.filename
 					if i.item.move_to ("." + file_location) then
 						Result := file_location
