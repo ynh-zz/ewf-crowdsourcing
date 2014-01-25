@@ -747,7 +747,7 @@ WSF_FILE_CONTROL = (function(_super) {
       _ref.remove();
     }
     this.$el.parent().find("p, img").remove();
-    if (this.state['file_id'] !== null) {
+    if (this.state['file_id'] != null) {
       this.$el.hide();
       fname = $("<p></p>").addClass("form-control-static").text(this.state['file_name']);
       this.$el.parent().append(fname);

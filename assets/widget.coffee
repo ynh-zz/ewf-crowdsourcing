@@ -476,7 +476,7 @@ class WSF_FILE_CONTROL extends WSF_CONTROL
       return
     @progressbar?.remove()
     @$el.parent().find("p, img").remove() 
-    if @state['file_id'] != null
+    if @state['file_id']?
       @$el.hide()
       fname = $("""<p></p>""").addClass("form-control-static").text(@state['file_name'])
       @$el.parent().append(fname)
