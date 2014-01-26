@@ -30,8 +30,11 @@ feature {NONE} -- Initialization
 			funding_goal: WSF_INPUT_CONTROL
 			short_description: WSF_INPUT_CONTROL
 			description: WSF_TEXTAREA_CONTROL
-			thumbnail: WSF_INPUT_CONTROL
+			thumbnail: WSF_FILE_CONTROL
 			button: WSF_BUTTON_CONTROL
+			button1: WSF_BUTTON_CONTROL
+			button2: WSF_BUTTON_CONTROL
+			button3: WSF_BUTTON_CONTROL
 		do
 			Precursor
 			navbar.set_active (3)
@@ -75,19 +78,62 @@ feature {NONE} -- Initialization
 			create description_container.make ("Description", description)
 			description_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_description, "Enter a valid description!"))
 			form.add_control (description_container)
-			create thumbnail.make ("")
-			thumbnail.set_type ("url")
-			thumbnail.append_attribute ("placeholder=%"optional%"")
+			create thumbnail.make_with_image_preview
 			create thumbnail_container.make ("Thumbnail URL", thumbnail)
-			thumbnail_container.add_validator (create {WSF_AGENT_VALIDATOR [STRING]}.make (agent check_thumbnail, "Enter a valid thumbnail!"))
 			form.add_control (thumbnail_container)
-			create button.make ("CREATE PROJECT")
-			button.add_class ("btn-success btn-block")
+
+
+			form.add_control (create {WSF_BASIC_CONTROL}.make_with_body ("h2", "", "Rewards"))
+			create rewards.make_with_tag_name ("div")
+			form.add_control (rewards)
+			create button1.make ("Add Reward")
+			button1.add_class ("btn-block")
+			button1.set_click_event (agent add_reward)
+			form.add_control (button1)
+
+
+
+			form.add_control (create {WSF_BASIC_CONTROL}.make_with_body ("h2", "", "Goals"))
+			create goals.make_with_tag_name ("div")
+			form.add_control (goals)
+			create button2.make ("Add Goal")
+			button2.add_class ("btn-block")
+			button2.set_click_event (agent add_goal)
+			form.add_control (button2)
+
+
+			form.add_control (create {WSF_BASIC_CONTROL}.make_with_body ("h2", "", "Images"))
+			create images.make_with_tag_name ("div")
+			form.add_control (images)
+			create button3.make ("Add Image")
+			button3.add_class ("btn-block")
+			button3.set_click_event (agent add_image)
+			form.add_control (button3)
+
+
+
+			create button.make ("Create Project")
+			button.add_class ("btn-success btn-block btn-lg")
 			button.set_click_event (agent handle_click)
 			form.add_control (button)
 		end
 
 feature -- Events
+
+	add_image
+		do
+			images.add_control_from_tag ("image")
+		end
+
+	add_goal
+		do
+			goals.add_control_from_tag ("goal")
+		end
+
+	add_reward
+		do
+			rewards.add_control_from_tag ("reward")
+		end
 
 	handle_click
 		local
@@ -145,11 +191,6 @@ feature -- Validations
 			Result := not input.is_empty
 		end
 
-	check_thumbnail (input: STRING): BOOLEAN
-		do
-			Result := True
-		end
-
 feature -- Implementation
 
 	process
@@ -178,6 +219,12 @@ feature -- Properties
 
 	description_container: WSF_FORM_ELEMENT_CONTROL [STRING]
 
-	thumbnail_container: WSF_FORM_ELEMENT_CONTROL [STRING]
+	thumbnail_container: WSF_FORM_ELEMENT_CONTROL [detachable WSF_FILE]
+
+	rewards: REWARD_INPUT_REPEATER
+
+	goals: GOAL_INPUT_REPEATER
+
+	images: IMAGE_INPUT_REPEATER
 
 end
